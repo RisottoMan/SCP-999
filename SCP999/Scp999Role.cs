@@ -1,14 +1,14 @@
-using Exiled.API.Features;
+﻿using Exiled.API.Features;
 using Exiled.CustomRoles.API.Features;
 using PlayerRoles;
 using UnityEngine;
-using MapEditorReborn.API.Features.Objects;
 using System.Collections.Generic;
 using Exiled.API.Features.Spawn;
 using Exiled.API.Enums;
+using Exiled.API.Features.Roles;
 using YamlDotNet.Serialization;
 
-namespace SCP999;
+namespace Scp999;
 public class Scp999Role : CustomRole
 {
     public override string Name { get; set; } = "SCP-999";
@@ -32,7 +32,7 @@ public class Scp999Role : CustomRole
     [YamlIgnore]
     public override RoleTypeId Role { get; set; } = RoleTypeId.Tutorial;
     public string SchematicName { get; set; } = "SCP_999";
-    private static SchematicObject _schematicObject;
+    //private static SchematicObject _schematicObject;
     private static Animator _animator;
     //private static AudioPlayerBase _audioPlayerBase;
     
@@ -42,11 +42,6 @@ public class Scp999Role : CustomRole
     /// <param name="player">The player who should become SCP-999</param>
     public override void AddRole(Player player)
     {
-        Log.Debug($"Player is NPC: {player.IsNPC}");
-        Log.Debug($"Player Nickname: {player.Nickname}");
-        Log.Debug($"Tracked Players Count: {TrackedPlayers.Count}");
-        Log.Debug($"Spawn Limit: {SpawnProperties.Limit}");
-        
         if (player.IsNPC || TrackedPlayers.Count >= SpawnProperties.Limit)
             return;
         
@@ -63,12 +58,12 @@ public class Scp999Role : CustomRole
         // Making the player invisible to all players
         SendFakeSpawnMessage(player, Scale);
 
-        _schematicObject = MerExtensions.SpawnSchematicByName(SchematicName, player.Position, player.Rotation, player.Scale);
-        if (_schematicObject == null)
-        {
-            this.RemoveRole(player);
-            return;
-        }
+        //_schematicObject = MerExtensions.SpawnSchematicByName(SchematicName, player.Position, player.Rotation, player.Scale);
+        //if (_schematicObject == null)
+        //{
+        //    this.RemoveRole(player);
+        //    return;
+        //}
         
         /*
         _animator = MerExtensions.GetAnimatorFromSchematic(_schematicObject);
@@ -78,9 +73,9 @@ public class Scp999Role : CustomRole
             return;
         }*/
         
-        _schematicObject.transform.parent = player.Transform;
-        _schematicObject.transform.rotation = new Quaternion();
-        _schematicObject.transform.position = player.Position + new Vector3(0, -.25f, 0);
+        //_schematicObject.transform.parent = player.Transform;
+        //_schematicObject.transform.rotation = new Quaternion();
+        //_schematicObject.transform.position = player.Position + new Vector3(0, -.25f, 0);
     }
 
     /// <summary>
@@ -89,7 +84,7 @@ public class Scp999Role : CustomRole
     /// <param name="player">A player who should become normal role</param>
     public override void RemoveRole(Player player)
     {
-        _schematicObject?.Destroy();
+        //_schematicObject?.Destroy();
     }
     
     /// <summary>
@@ -97,8 +92,12 @@ public class Scp999Role : CustomRole
     /// </summary>
     /// <param name="player"></param>
     /// <param name="scale"></param>
-    public void SendFakeSpawnMessage(Player player, Vector3 scale)
+    private void SendFakeSpawnMessage(Player player, Vector3 scale)
     {
+        if (player.Role is FpcRole fpcRole) {
+            fpcRole.IsInvisible = true;
+        }
+        /*
         player.ReferenceHub.transform.localScale = Vector3.zero;
 
         foreach (Player target in Player.List)
@@ -106,9 +105,10 @@ public class Scp999Role : CustomRole
             if (target == player)
                 continue;
             
-            Server.SendSpawnMessage?.Invoke(null, new object[] { player.ReferenceHub.networkIdentity, target.Connection });
+            Server.SendSpawnMessage?.Invoke(null, [player.ReferenceHub.networkIdentity, target.Connection]);
         }
         
         player.ReferenceHub.transform.localScale = scale;
+        */
     }
 }

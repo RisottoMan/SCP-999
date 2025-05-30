@@ -1,47 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Exiled.API.Enums;
-using Exiled.API.Features;
+﻿using Exiled.API.Features;
 using Exiled.CustomRoles.API.Features;
 using Exiled.Events.EventArgs.Player;
 using Exiled.Events.EventArgs.Scp096;
 using Exiled.Events.EventArgs.Warhead;
-using SCP999.Interfaces;
 
-namespace SCP999;
+namespace Scp999;
 public class EventHandler
 {
-    private List<IAbility> _abilityList;
-    
-    /// <summary>
-    /// Activate all ability classes and save to the list
-    /// </summary>
-    public void OnWaitingRound()
-    {
-        _abilityList = new List<IAbility>();
-        
-        foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
-        {
-            try
-            {
-                if (type.IsInterface || !type.GetInterfaces().Contains(typeof(IAbility)))
-                    continue;
-
-                var activator = Activator.CreateInstance(type) as IAbility;
-                if (activator != null)
-                {
-                    _abilityList.Add(activator);
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error("OnWaitingRound error in IAbility:" + ex.Message);
-            }
-        }
-    }
-    
     /// <summary>
     /// The logic of choosing SCP-999 if the round is started
     /// </summary>
@@ -79,8 +44,6 @@ public class EventHandler
         if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
         {
             ev.IsAllowed = false;
-            
-            _abilityList.FirstOrDefault(r => r.ItemType == ev.Item.Type)?.Invoke(ev);
         }
     }
     
@@ -89,22 +52,9 @@ public class EventHandler
     /// </summary>
     public void OnInteractingDoor(InteractingDoorEventArgs ev)
     {
-        if (!CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
-            return;
-        
-        switch (ev.Door.Type)
+        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
         {
-            case DoorType.GateA:
-            case DoorType.GateB:
-            case DoorType.LczArmory:
-            case DoorType.Scp049Armory:
-            case DoorType.HID:
-            { break; }
-            default:
-            {
-                ev.IsAllowed = true;
-                break;
-            }
+            ev.IsAllowed = false;
         }
     }
     
@@ -115,19 +65,14 @@ public class EventHandler
     {
         if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
         {
-            if (ev.Amount < CustomRole.Get(typeof(Scp999Role))!.MaxHealth)
-            {
-                ev.IsAllowed = false;
-                ev.Attacker?.ShowHitMarker();
-                ev.Player.Health -= 100;
-            }
+            ev.IsAllowed = false;
         }
     }
     
     /// <summary>
     /// Does not allow SCP-999 to pick up items
     /// </summary>
-    public void OnSeachingPickup(SearchingPickupEventArgs ev)
+    public void OnSearchingPickup(SearchingPickupEventArgs ev)
     {
         if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
         {

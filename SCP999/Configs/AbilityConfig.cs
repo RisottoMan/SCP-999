@@ -1,4 +1,4 @@
-﻿namespace SCP999;
+﻿namespace Scp999;
 public class AbilityConfig
 {
     public float Range { get; set; }

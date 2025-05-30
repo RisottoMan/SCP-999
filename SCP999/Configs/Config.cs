@@ -1,8 +1,8 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using Exiled.API.Interfaces;
 
-namespace SCP999;
+namespace Scp999;
 public class Config : IConfig
 {
     [Description("Whether or not is the plugin enabled?")]

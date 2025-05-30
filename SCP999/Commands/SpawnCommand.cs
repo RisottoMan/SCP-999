@@ -5,7 +5,7 @@ using Exiled.API.Features;
 using Exiled.CustomRoles.API.Features;
 using Exiled.Permissions.Extensions;
 
-namespace SCP999;
+namespace Scp999.Commands;
 
 [CommandHandler(typeof(RemoteAdminCommandHandler))]
 public class SCP999Command : ICommand
