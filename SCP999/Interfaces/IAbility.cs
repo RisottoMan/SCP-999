@@ -1,12 +1,9 @@
-﻿using Exiled.Events.EventArgs.Player;
-using UnityEngine;
-
-namespace Scp999.Interfaces;
+﻿namespace Scp999.Interfaces;
 public interface IAbility
 {
     string Name { get; }
     string Description { get; }
-    KeyCode KeyBind { get; }
+    int KeyId { get; }
     void Register();
     void Unregister();
 }

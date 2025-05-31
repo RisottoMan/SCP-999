@@ -34,7 +34,7 @@ public class Plugin : Plugin<Config>
         Config.Scp999RoleConfig.Register();
         
         // Create config folders
-        BasePath = Path.Combine(Paths.Configs, "SCP999");
+        BasePath = Path.Combine(Paths.IndividualConfigs, this.Name.ToLower());
         SchematicPath = Path.Combine(BasePath, "Schematics");
         AudioPath = Path.Combine(BasePath, "Audio");
         this.CreatePluginDirectory(BasePath);
@@ -42,7 +42,7 @@ public class Plugin : Plugin<Config>
         this.CreatePluginDirectory(AudioPath);
 
         // Register the abilities
-        Methods.RegisterAbilities();
+        AbilityFeature.RegisterAbilities();
         
         // Event handlers
         Exiled.Events.Handlers.Server.RoundStarted += _eventHandler.OnRoundStarted;
@@ -84,7 +84,7 @@ public class Plugin : Plugin<Config>
         Exiled.Events.Handlers.Player.Spawning -= _eventHandler.OnPlayerSpawning;
         Exiled.Events.Handlers.Player.ChangingRole -= _eventHandler.OnChangingRole;
         
-        Methods.UnregisterAbilities();
+        AbilityFeature.UnregisterAbilities();
         
         Config.Scp999RoleConfig.Unregister();
         _harmony.UnpatchAll();

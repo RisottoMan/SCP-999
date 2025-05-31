@@ -1,33 +1,17 @@
-﻿using System.Collections.Generic;
-using Exiled.API.Features;
-using Exiled.API.Features.Core.UserSettings;
-using Exiled.CustomRoles.API.Features;
+﻿using Exiled.API.Features;
 using Scp999.Interfaces;
 using UnityEngine;
 using UserSettings.ServerSpecific;
 
 namespace Scp999.Abilities;
-
 public class HealAbility : IAbility
 {
     public string Name { get; } = "Heal";
     public string Description { get; } = "Restores health to players within a radius";
-    public KeyCode KeyBind { get; } = KeyCode.R;
-    
-    private IEnumerable<SettingBase> _settings;
-    
+    public int KeyId { get; } = 9993;
     public void Register()
     {
         ServerSpecificSettingsSync.ServerOnSettingValueReceived += KeybindActivateAbility;
-
-        _settings = new[]
-        {
-            new KeybindSetting(9993, 
-                "[SCP-999] Heal around", 
-                this.KeyBind, 
-                hintDescription: "Pressing the button activates the restoration of health around you for all players.")
-        };
-        SettingBase.Register(_settings);
     }
 
     public void Unregister()
@@ -35,15 +19,12 @@ public class HealAbility : IAbility
         ServerSpecificSettingsSync.ServerOnSettingValueReceived -= KeybindActivateAbility;
     }
     
-    private static void KeybindActivateAbility(ReferenceHub referenceHub, ServerSpecificSettingBase settingBase)
+    private void KeybindActivateAbility(ReferenceHub referenceHub, ServerSpecificSettingBase settingBase)
     {
-        if (settingBase is not SSKeybindSetting keybindSetting || keybindSetting.SettingId != 9993 || !keybindSetting.SyncIsPressed)
+        if (settingBase is not SSKeybindSetting keybindSetting || keybindSetting.SettingId != this.KeyId || !keybindSetting.SyncIsPressed)
             return;
         
         if (!Player.TryGet(referenceHub, out Player player))
-            return;
-        
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(player))
             return;
 
         foreach (Player ply in Player.List)

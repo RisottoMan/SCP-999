@@ -31,6 +31,9 @@
         <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
           <HintPath>packages\ExMod.Exiled.9.6.0\lib\net48\Assembly-CSharp-Publicized.dll</HintPath>
         </Reference>
+        <Reference Include="AudioPlayerApi">
+          <HintPath>..\..\..\..\..\SCP Dependencies\AudioPlayerApi.dll</HintPath>
+        </Reference>
         <Reference Include="CommandSystem.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
           <HintPath>packages\ExMod.Exiled.9.6.0\lib\net48\CommandSystem.Core.dll</HintPath>
         </Reference>
@@ -75,16 +78,20 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Abilities\AnimationAbility.cs" />
+        <Compile Include="Abilities\FaceAbility.cs" />
         <Compile Include="Abilities\HealAbility.cs" />
         <Compile Include="Abilities\HelloAbility.cs" />
         <Compile Include="Abilities\SizeAbility.cs" />
         <Compile Include="Abilities\YippeeAbility.cs" />
         <Compile Include="Commands\SpawnCommand.cs" />
-        <Compile Include="Configs\AbilityConfig.cs" />
         <Compile Include="Configs\Config.cs" />
         <Compile Include="Configs\Translation.cs" />
         <Compile Include="EventHandler.cs" />
-        <Compile Include="Features\Methods.cs" />
+        <Compile Include="Features\AudioFeature.cs" />
+        <Compile Include="Features\InvisibleFeature.cs" />
+        <Compile Include="Features\KeybindFeature.cs" />
+        <Compile Include="Features\AbilityFeature.cs" />
+        <Compile Include="Features\SchematicFeature.cs" />
         <Compile Include="Interfaces\IAbility.cs" />
         <Compile Include="Patches\SchematicMerPatch.cs" />
         <Compile Include="Plugin.cs" />

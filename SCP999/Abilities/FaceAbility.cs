@@ -3,11 +3,11 @@ using Scp999.Interfaces;
 using UserSettings.ServerSpecific;
 
 namespace Scp999.Abilities;
-public class YippeeAbility : IAbility
+public class FaceAbility : IAbility
 {
-    public string Name { get; } = "Yippee";
-    public string Description { get; } = "Play the Yippee sound";
-    public int KeyId { get; } = 9990;
+    public string Name { get; } = "Face";
+    public string Description { get; } = "Change the facial animation";
+    public int KeyId { get; } = 9995;
     public void Register()
     {
         ServerSpecificSettingsSync.ServerOnSettingValueReceived += KeybindActivateAbility;
@@ -26,8 +26,8 @@ public class YippeeAbility : IAbility
         if (!Player.TryGet(referenceHub, out Player player))
             return;
         
-        //PlaySound();
+        //ChangeAnimation();
         
-        Log.Debug("[HealAbility] Activating the Yippee ability");
+        Log.Debug("[HealAbility] Activating the Face ability");
     }
 }
