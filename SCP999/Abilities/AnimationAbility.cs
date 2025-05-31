@@ -26,6 +26,9 @@ public class AnimationAbility : IAbility
         if (!Player.TryGet(referenceHub, out Player player))
             return;
 
+        //var schematic = player.GameObject.GetComponent<PlayerComponent>().GetCurrentSchematic;
+        //Log.Error(schematic);
+        
         //PlayAnimation();
         
         Log.Debug("[HealAbility] Activating the random animation ability");

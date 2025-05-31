@@ -5,7 +5,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using Exiled.API.Features.Spawn;
 using Exiled.API.Enums;
-using MapEditorReborn.API.Features.Objects;
 using YamlDotNet.Serialization;
 
 namespace Scp999;
@@ -31,9 +30,6 @@ public class Scp999Role : CustomRole
     
     [YamlIgnore]
     public override RoleTypeId Role { get; set; } = RoleTypeId.Tutorial;
-    private static SchematicObject _schematicObject;
-    private static Animator _animator;
-    private static AudioPlayer _audioPlayer;
     
     /// <summary>
     /// Adding the SCP-999 role to the player
@@ -50,17 +46,8 @@ public class Scp999Role : CustomRole
         player.Health = MaxHealth;
         player.IsGodModeEnabled = Plugin.Singleton.Config.IsGodModeEnabled;
         
-        // Making the player invisible to all players
-        InvisibleFeature.MakeInvisibleForPlayer(player);
-
-        // Register keybinds for player
-        KeybindFeature.RegisterKeybindsForPlayer(player);
-        
-        // Attach a schematic to the player
-        SchematicFeature.AddSchematic(player, out _schematicObject);
-        
-        // Attach a AudioPlayer to the player
-        AudioFeature.AddAudioPlayer(player, out _audioPlayer);
+        // Register PlayerComponent for player
+        player.GameObject.AddComponent<PlayerComponent>().Register();
     }
 
     /// <summary>
@@ -71,16 +58,7 @@ public class Scp999Role : CustomRole
     {
         player.Scale = Vector3.one;
         
-        // Remove player invisibility for all players
-        InvisibleFeature.RemoveInvisibleForPlayer(player);
-        
-        // Unregister keybinds for player
-        KeybindFeature.UnregisterKeybindsForPlayer(player);
-        
-        // Remove schematic to the player
-        SchematicFeature.RemoveSchematic(player, _schematicObject);
-        
-        // Remove a AudioPlayer to the player
-        AudioFeature.RemoveAudioPlayer(player, _audioPlayer);
+        // Unregister PlayerComponent for player
+        player.GameObject.GetComponent<PlayerComponent>().Unregister();
     }
 }

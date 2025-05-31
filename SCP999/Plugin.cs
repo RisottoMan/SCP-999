@@ -23,6 +23,8 @@ public class Plugin : Plugin<Config>
 
     public override void OnEnabled()
     {
+        //CosturaUtility.Initialize();
+        
         Singleton = this;
         _eventHandler = new EventHandler();
 

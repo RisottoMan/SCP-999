@@ -1,34 +1,41 @@
-﻿using Exiled.API.Features;
+﻿using System;
+using Exiled.API.Features;
+using MapEditorReborn.API.Features;
 using MapEditorReborn.API.Features.Objects;
+using UnityEngine;
 
 namespace Scp999;
 public class SchematicFeature
 {
     public static void AddSchematic(Player player, out SchematicObject schematicObject)
     {
-        //_schematicObject = MerExtensions.SpawnSchematicByName(SchematicName, player.Position, player.Rotation, player.Scale);
-        //if (_schematicObject == null)
-        //{
-        //    this.RemoveRole(player);
-        //    return;
-        //}
-        
-        /*
-        _animator = MerExtensions.GetAnimatorFromSchematic(_schematicObject);
-        if (_animator == null)
+        try
         {
-            this.RemoveRole(player);
+            schematicObject = ObjectSpawner.SpawnSchematic("SCP999", Vector3.zero, Quaternion.identity, Vector3.one,null);
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"An error occurred when loading schematics: {ex}");
+            schematicObject = null;
             return;
-        }*/
+        }
         
-        //_schematicObject.transform.parent = player.Transform;
-        //_schematicObject.transform.rotation = new Quaternion();
-        //_schematicObject.transform.position = player.Position + new Vector3(0, -.25f, 0);
-        schematicObject = new SchematicObject();
+        schematicObject.transform.parent = player.Transform;
+        schematicObject.transform.rotation = new Quaternion();
+        schematicObject.transform.position = player.Position + new Vector3(0, -.25f, 0);
     }
 
     public static void RemoveSchematic(Player player, SchematicObject schematicObject)
     {
         schematicObject?.Destroy();
+    }
+
+    public static void GetAnimatorFromSchematic(SchematicObject schematicObject, out Animator animator)
+    {
+        animator = schematicObject?.GetComponentInChildren<Animator>(true);
+        if (animator == null)
+        {
+            Log.Error("The animator was not found");
+        }
     }
 }

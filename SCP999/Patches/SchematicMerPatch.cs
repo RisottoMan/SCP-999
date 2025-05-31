@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.IO;
 using HarmonyLib;
 
 namespace Scp999.Patches;
@@ -14,10 +13,10 @@ public class SchematicMerPatch
         {
             var declaringType = frame.GetMethod().DeclaringType;
             var assemblyName = declaringType.Assembly.GetName().Name;
-
-            if (assemblyName == "SCP999" && declaringType.Name == "Features")
+            
+            if (assemblyName == "Scp999" && declaringType.Name == "SchematicFeature")
             {
-                __result = Path.Combine(Plugin.SchematicPath, "Schematics");
+                __result = Plugin.SchematicPath;
                 return false;
             }
         }
