@@ -61,6 +61,9 @@
         <Reference Include="Exiled.Permissions, Version=9.6.0.0, Culture=neutral, processorArchitecture=Amd64">
           <HintPath>packages\ExMod.Exiled.9.6.0\lib\net48\Exiled.Permissions.dll</HintPath>
         </Reference>
+        <Reference Include="HintServiceMeow">
+          <HintPath>..\..\..\..\..\SCP Dependencies\HintServiceMeow-Exiled.dll</HintPath>
+        </Reference>
         <Reference Include="LabApi, Version=1.0.0.0, Culture=neutral, processorArchitecture=Amd64">
           <HintPath>packages\ExMod.Exiled.9.6.0\lib\net48\LabApi.dll</HintPath>
         </Reference>
@@ -175,6 +178,7 @@
         <Compile Include="EventHandler.cs" />
         <Compile Include="Features\AudioFeature.cs" />
         <Compile Include="Features\Components\PlayerComponent.cs" />
+        <Compile Include="Features\HintFeature.cs" />
         <Compile Include="Features\InvisibleFeature.cs" />
         <Compile Include="Features\KeybindFeature.cs" />
         <Compile Include="Features\AbilityFeature.cs" />

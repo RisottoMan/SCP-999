@@ -189,4 +189,15 @@ public class EventHandler
             ev.IsAllowed = false;
         }
     }
+
+    /// <summary>
+    /// Does not allow SCP-999 to talk in voice chat
+    /// </summary>
+    public void OnVoiceChatting(VoiceChattingEventArgs ev)
+    {
+        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
+        {
+            ev.IsAllowed = false;
+        }
+    }
 }

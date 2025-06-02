@@ -17,9 +17,9 @@ public class Plugin : Plugin<Config>
     public static Plugin Singleton;
     
     // Configs path
-    public static string BasePath { get; set; }
-    public static string SchematicPath { get; set; }
-    public static string AudioPath { get; set; }
+    public string BasePath { get; set; }
+    public string SchematicPath { get; set; }
+    public string AudioPath { get; set; }
 
     public override void OnEnabled()
     {
@@ -63,6 +63,7 @@ public class Plugin : Plugin<Config>
         Exiled.Events.Handlers.Player.Left += _eventHandler.OnPlayerLeft;
         Exiled.Events.Handlers.Player.Spawning += _eventHandler.OnPlayerSpawning;
         Exiled.Events.Handlers.Player.ChangingRole += _eventHandler.OnChangingRole;
+        Exiled.Events.Handlers.Player.VoiceChatting += _eventHandler.OnVoiceChatting;
         
         base.OnEnabled();
     }
@@ -85,6 +86,7 @@ public class Plugin : Plugin<Config>
         Exiled.Events.Handlers.Player.Left -= _eventHandler.OnPlayerLeft;
         Exiled.Events.Handlers.Player.Spawning -= _eventHandler.OnPlayerSpawning;
         Exiled.Events.Handlers.Player.ChangingRole -= _eventHandler.OnChangingRole;
+        Exiled.Events.Handlers.Player.VoiceChatting -= _eventHandler.OnVoiceChatting;
         
         AbilityFeature.UnregisterAbilities();
         

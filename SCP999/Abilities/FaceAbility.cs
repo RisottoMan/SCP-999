@@ -8,6 +8,7 @@ public class FaceAbility : IAbility
     public string Name { get; } = "Face";
     public string Description { get; } = "Change the facial animation";
     public int KeyId { get; } = 9995;
+    public int Cooldown { get; } = 3;
     public void Register()
     {
         ServerSpecificSettingsSync.ServerOnSettingValueReceived += KeybindActivateAbility;

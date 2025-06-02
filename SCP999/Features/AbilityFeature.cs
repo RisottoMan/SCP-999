@@ -47,4 +47,6 @@ public static class AbilityFeature
             }
         }
     }
+
+    public static List<IAbility> GetAvailableAbilities => _abilityList;
 }

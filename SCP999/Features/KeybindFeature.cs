@@ -8,7 +8,7 @@ public class KeybindFeature
 {
     private static IEnumerable<SettingBase> _settings = new SettingBase[]
     {
-        new HeaderSetting("SCP999"),
+        new HeaderSetting("Abilities of SCP-999"),
         new KeybindSetting(9990,
             "Yippee sound",
             KeyCode.Q,

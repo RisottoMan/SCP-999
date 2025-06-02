@@ -8,6 +8,7 @@ public class SizeAbility : IAbility
     public string Name { get; } = "Size";
     public string Description { get; } = "Change the size of a specific player";
     public int KeyId { get; } = 9991;
+    public int Cooldown { get; } = 30;
     public void Register()
     {
         ServerSpecificSettingsSync.ServerOnSettingValueReceived += KeybindActivateAbility;

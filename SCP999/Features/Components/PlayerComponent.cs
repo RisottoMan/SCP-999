@@ -10,6 +10,9 @@ public class PlayerComponent : MonoBehaviour
         if (!Player.TryGet(gameObject, out this._player))
             return;
         
+        // Add hint for player
+        HintFeature.AddHint(this._player);
+        
         // Making the player invisible to all players
         InvisibleFeature.MakeInvisibleForPlayer(this._player);
         
@@ -34,6 +37,9 @@ public class PlayerComponent : MonoBehaviour
         // Unregister keybinds for player
         KeybindFeature.UnregisterKeybindsForPlayer(this._player);
 
+        // Add hint for player
+        HintFeature.RemoveHint(this._player);
+        
         // Remove a AudioPlayer to the player
         AudioFeature.RemoveAudioPlayer(this._audioPlayer);
         

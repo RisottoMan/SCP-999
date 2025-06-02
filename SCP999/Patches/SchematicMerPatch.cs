@@ -16,7 +16,7 @@ public class SchematicMerPatch
             
             if (assemblyName == "Scp999" && declaringType.Name == "SchematicFeature")
             {
-                __result = Plugin.SchematicPath;
+                __result = Plugin.Singleton.SchematicPath;
                 return false;
             }
         }
