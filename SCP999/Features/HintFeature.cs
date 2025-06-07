@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
-using Exiled.API.Enums;
 using Exiled.API.Features;
 using HintServiceMeow.Core.Enum;
-using HintServiceMeow.Core.Extension;
 using HintServiceMeow.Core.Utilities;
 using Scp999.Interfaces;
 using Hint = HintServiceMeow.Core.Models.Hints.Hint;
@@ -20,17 +18,17 @@ public class HintFeature
         {
             stringBuilder.Append(ability.Name + "\n");
         }
-        
+        /*
         Hint hint = new Hint
         {
             Text = stringBuilder.ToString(),
             FontSize = 40,
             YCoordinate = 700,
-            Alignment = HintAlignment.Left
+            Alignment = HintAlignment.Right
         };
 
-        PlayerDisplay playerDisplay = PlayerDisplay.Get(player);Room.Get(RoomType.Surface)
-        playerDisplay.AddHint(hint);
+        PlayerDisplay playerDisplay = PlayerDisplay.Get(player);
+        playerDisplay.AddHint(hint);*/
     }
 
     public static void RemoveHint(Player player)

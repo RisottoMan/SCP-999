@@ -5,16 +5,16 @@ using UnityEngine;
 namespace Scp999;
 public class PlayerComponent : MonoBehaviour
 {
-    public void Register()
+    public void Awake()
     {
         if (!Player.TryGet(gameObject, out this._player))
             return;
         
+        // Register keybinds for player
+        KeybindFeature.RegisterKeybindsForPlayer(this._player);
+        
         // Add hint for player
         HintFeature.AddHint(this._player);
-        
-        // Making the player invisible to all players
-        InvisibleFeature.MakeInvisibleForPlayer(this._player);
         
         // Attach a AudioPlayer to the player
         AudioFeature.AddAudioPlayer(this._player, out this._audioPlayer);
@@ -24,15 +24,17 @@ public class PlayerComponent : MonoBehaviour
         
         if (this._schematicObject is not null)
         {
+            // Making the player invisible to all players
+            InvisibleFeature.MakeInvisibleForPlayer(this._player);
+            
             // Getting an animator from an existing schematic
             SchematicFeature.GetAnimatorFromSchematic(this._schematicObject, out this._animator);
-        
-            // Register keybinds for player
-            KeybindFeature.RegisterKeybindsForPlayer(this._player);
         }
+        
+        Log.Debug($"[PlayerComponent] Custom role granted for {this._player.Nickname}");
     }
 
-    public void Unregister()
+    public void OnDestroy()
     {
         // Unregister keybinds for player
         KeybindFeature.UnregisterKeybindsForPlayer(this._player);
@@ -45,14 +47,14 @@ public class PlayerComponent : MonoBehaviour
         
         if (this._schematicObject is not null)
         {
-            // Remove schematic to the player
-            SchematicFeature.RemoveSchematic(this._player, this._schematicObject);
-            
             // Remove player invisibility for all players
             InvisibleFeature.RemoveInvisibleForPlayer(this._player);
+            
+            // Remove schematic to the player
+            SchematicFeature.RemoveSchematic(this._player, this._schematicObject);
         }
         
-        Destroy(this);
+        Log.Debug($"[PlayerComponent] Custom role removed for {this._player.Nickname}");
     }
 
     public SchematicObject GetCurrentSchematic => this._schematicObject;

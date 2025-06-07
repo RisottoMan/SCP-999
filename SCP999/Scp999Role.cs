@@ -47,7 +47,7 @@ public class Scp999Role : CustomRole
         player.IsGodModeEnabled = Plugin.Singleton.Config.IsGodModeEnabled;
         
         // Register PlayerComponent for player
-        player.GameObject.AddComponent<PlayerComponent>().Register();
+        player.GameObject.AddComponent<PlayerComponent>();
     }
 
     /// <summary>
@@ -57,8 +57,9 @@ public class Scp999Role : CustomRole
     public override void RemoveRole(Player player)
     {
         player.Scale = Vector3.one;
+        //player.Role.Set(RoleTypeId.Spectator);
         
         // Unregister PlayerComponent for player
-        player.GameObject.GetComponent<PlayerComponent>().Unregister();
+        Object.Destroy(player.GameObject.GetComponent<PlayerComponent>());
     }
 }

@@ -1,33 +1,16 @@
 ﻿using Exiled.API.Features;
 using Scp999.Interfaces;
 using UnityEngine;
-using UserSettings.ServerSpecific;
 
 namespace Scp999.Abilities;
-public class HelloAbility : IAbility
+public class HelloAbility : Ability
 {
-    public string Name { get; } = "Hello";
-    public string Description { get; } = "Greeting players or attracting attention";
-    public int KeyId { get; } = 9992;
-    public int Cooldown { get; } = 10;
-    public void Register()
+    public override string Name => "Hello";
+    public override string Description => "Greeting players or attracting attention";
+    public override int KeyId => 9992;
+    public override float Cooldown => 10f;
+    protected override void ActivateAbility(Player player)
     {
-        ServerSpecificSettingsSync.ServerOnSettingValueReceived += KeybindActivateAbility;
-    }
-
-    public void Unregister()
-    {
-        ServerSpecificSettingsSync.ServerOnSettingValueReceived -= KeybindActivateAbility;
-    }
-    
-    private void KeybindActivateAbility(ReferenceHub referenceHub, ServerSpecificSettingBase settingBase)
-    {
-        if (settingBase is not SSKeybindSetting keybindSetting || keybindSetting.SettingId != this.KeyId || !keybindSetting.SyncIsPressed)
-            return;
-        
-        if (!Player.TryGet(referenceHub, out Player player))
-            return;
-        
         Animator animator = player.GameObject.GetComponent<PlayerComponent>().GetCurrentAnimator;
         if (animator is null)
             return;
@@ -37,6 +20,5 @@ public class HelloAbility : IAbility
             return;
         
         animator.Play("HelloAnimation");
-        Log.Debug("[HealAbility] Activating the greeting animation ability");
     }
 }

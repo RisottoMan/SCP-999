@@ -12,7 +12,7 @@
         <AssemblyName>Scp999</AssemblyName>
         <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
-        <LangVersion>10</LangVersion>
+        <LangVersion>12</LangVersion>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
         <PlatformTarget>AnyCPU</PlatformTarget>
@@ -172,7 +172,9 @@
         <Compile Include="Abilities\HelloAbility.cs" />
         <Compile Include="Abilities\SizeAbility.cs" />
         <Compile Include="Abilities\YippeeAbility.cs" />
-        <Compile Include="Commands\SpawnCommand.cs" />
+        <Compile Include="Commands\MainCommand.cs" />
+        <Compile Include="Commands\Subcommands\GiveCommand.cs" />
+        <Compile Include="Commands\Subcommands\RemoveCommand.cs" />
         <Compile Include="Configs\Config.cs" />
         <Compile Include="Configs\Translation.cs" />
         <Compile Include="EventHandler.cs" />
@@ -183,6 +185,7 @@
         <Compile Include="Features\KeybindFeature.cs" />
         <Compile Include="Features\AbilityFeature.cs" />
         <Compile Include="Features\SchematicFeature.cs" />
+        <Compile Include="Interfaces\Ability.cs" />
         <Compile Include="Interfaces\IAbility.cs" />
         <Compile Include="Patches\SchematicMerPatch.cs" />
         <Compile Include="Plugin.cs" />

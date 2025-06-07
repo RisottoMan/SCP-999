@@ -1,34 +1,15 @@
 ﻿using Exiled.API.Features;
 using Scp999.Interfaces;
-using UserSettings.ServerSpecific;
 
 namespace Scp999.Abilities;
-public class FaceAbility : IAbility
+public class FaceAbility : Ability
 {
-    public string Name { get; } = "Face";
-    public string Description { get; } = "Change the facial animation";
-    public int KeyId { get; } = 9995;
-    public int Cooldown { get; } = 3;
-    public void Register()
+    public override string Name => "Face";
+    public override string Description => "Change the facial animation";
+    public override int KeyId => 9995;
+    public override float Cooldown => 3f;
+    protected override void ActivateAbility(Player player)
     {
-        ServerSpecificSettingsSync.ServerOnSettingValueReceived += KeybindActivateAbility;
-    }
-
-    public void Unregister()
-    {
-        ServerSpecificSettingsSync.ServerOnSettingValueReceived -= KeybindActivateAbility;
-    }
-    
-    private void KeybindActivateAbility(ReferenceHub referenceHub, ServerSpecificSettingBase settingBase)
-    {
-        if (settingBase is not SSKeybindSetting keybindSetting || keybindSetting.SettingId != this.KeyId || !keybindSetting.SyncIsPressed)
-            return;
-        
-        if (!Player.TryGet(referenceHub, out Player player))
-            return;
-        
-        //ChangeAnimation();
-        
-        Log.Debug("[HealAbility] Activating the Face ability");
+        //ChangeAnimation(); //todo
     }
 }

@@ -1,33 +1,16 @@
 ﻿using Exiled.API.Features;
 using Scp999.Interfaces;
 using UnityEngine;
-using UserSettings.ServerSpecific;
 
 namespace Scp999.Abilities;
-public class AnimationAbility : IAbility
+public class AnimationAbility : Ability
 {
-    public string Name { get; } = "Random Animation";
-    public string Description { get; } = "Play a random funny animation";
-    public int KeyId { get; } = 9994;
-    public int Cooldown { get; } = 5;
-    public void Register()
+    public override string Name => "Random Animation";
+    public override string Description => "Play a random funny animation";
+    public override int KeyId => 9994;
+    public override float Cooldown => 5f;
+    protected override void ActivateAbility(Player player)
     {
-        ServerSpecificSettingsSync.ServerOnSettingValueReceived += KeybindActivateAbility;
-    }
-
-    public void Unregister()
-    {
-        ServerSpecificSettingsSync.ServerOnSettingValueReceived -= KeybindActivateAbility;
-    }
-    
-    private void KeybindActivateAbility(ReferenceHub referenceHub, ServerSpecificSettingBase settingBase)
-    {
-        if (settingBase is not SSKeybindSetting keybindSetting || keybindSetting.SettingId != this.KeyId || !keybindSetting.SyncIsPressed)
-            return;
-        
-        if (!Player.TryGet(referenceHub, out Player player))
-            return;
-
         Animator animator = player.GameObject.GetComponent<PlayerComponent>().GetCurrentAnimator;
         if (animator is null)
             return;
@@ -37,6 +20,5 @@ public class AnimationAbility : IAbility
             return;
         
         animator.Play($"FunAnimation_{Random.Range(0, 5)}");
-        Log.Debug("[HealAbility] Activating the random animation ability");
     }
 }

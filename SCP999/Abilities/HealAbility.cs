@@ -1,35 +1,17 @@
 ﻿using Exiled.API.Features;
 using Scp999.Interfaces;
 using UnityEngine;
-using UserSettings.ServerSpecific;
 
 namespace Scp999.Abilities;
-public class HealAbility : IAbility
+public class HealAbility : Ability
 {
-    public string Name { get; } = "Heal";
-    public string Description { get; } = "Restores health to players within a radius";
-    public int KeyId { get; } = 9993;
-    public int Cooldown { get; } = 15;
-    public void Register()
-    {
-        ServerSpecificSettingsSync.ServerOnSettingValueReceived += KeybindActivateAbility;
-    }
+    public override string Name => "Heal";
+    public override string Description => "Restores health to players within a radius";
+    public override int KeyId => 9993;
+    public override float Cooldown => 15f;
 
-    public void Unregister()
+    protected override void ActivateAbility(Player player)
     {
-        ServerSpecificSettingsSync.ServerOnSettingValueReceived -= KeybindActivateAbility;
-    }
-    
-    private void KeybindActivateAbility(ReferenceHub referenceHub, ServerSpecificSettingBase settingBase)
-    {
-        if (settingBase is not SSKeybindSetting keybindSetting || keybindSetting.SettingId != this.KeyId || !keybindSetting.SyncIsPressed)
-            return;
-        
-        if (!Player.TryGet(referenceHub, out Player player))
-            return;
-
-        
-        
         //Regardless of whether there is an animator or not to heal the players
         this.PlayAnimation(player);
         
@@ -43,8 +25,6 @@ public class HealAbility : IAbility
                 player.Heal(100);
             }
         }
-        
-        Log.Debug("[HealAbility] Activating the heal ability");
     }
 
     private void PlayAnimation(Player player)
