@@ -13,13 +13,15 @@ public class KeybindFeature
             "Yippee sound",
             KeyCode.Q,
             hintDescription: "When you click on this button, you will play the <i>Yippee</i> sound that all players will hear."),
+        /* todo - in next updates
         new KeybindSetting(9991,
             "Change player size",
             KeyCode.F,
             hintDescription: "When you click on this button, you can change the size of the player you are looking at."),
+        */
         new KeybindSetting(9992,
             "Greeting animation",
-            KeyCode.E,
+            KeyCode.F,
             hintDescription: "When you click on this button, you will greet the players or ask for attention."),
         new KeybindSetting(9993,
             "Heal around",
@@ -29,10 +31,12 @@ public class KeybindFeature
             "Funny animation", 
             KeyCode.T, 
             hintDescription: "Play a random funny animation. You will not be able to move during the animation."),
+        /* todo - in next updates
         new KeybindSetting(9995, 
             "Change face", 
             KeyCode.Y, 
             hintDescription: "Change the facial animation. You can become evil or kind."),
+        */
     };
     
     public static void RegisterKeybindsForPlayer(Player player)

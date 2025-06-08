@@ -8,7 +8,8 @@ public class HelloAbility : Ability
     public override string Name => "Hello";
     public override string Description => "Greeting players or attracting attention";
     public override int KeyId => 9992;
-    public override float Cooldown => 10f;
+    public override KeyCode KeyCode => KeyCode.F;
+    public override float Cooldown => 15f;
     protected override void ActivateAbility(Player player)
     {
         Animator animator = player.GameObject.GetComponent<PlayerComponent>().GetCurrentAnimator;

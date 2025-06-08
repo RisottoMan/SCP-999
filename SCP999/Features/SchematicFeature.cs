@@ -22,7 +22,7 @@ public class SchematicFeature
         
         schematicObject.transform.parent = player.Transform;
         schematicObject.transform.rotation = new Quaternion();
-        schematicObject.transform.position = player.Position + new Vector3(0, -.25f, 0);
+        schematicObject.transform.position = player.Position + new Vector3(0, -0.75f, 0);
     }
 
     public static void RemoveSchematic(Player player, SchematicObject schematicObject)

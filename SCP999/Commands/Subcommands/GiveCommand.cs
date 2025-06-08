@@ -4,7 +4,7 @@ using Exiled.API.Features;
 using Exiled.CustomRoles.API.Features;
 
 namespace Scp999.Commands;
-internal class GiveCommand : ICommand
+public class GiveCommand : ICommand
 {
     public string Command => "give";
     public string Description => "Give a custom role SCP-999 for player";

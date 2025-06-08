@@ -4,30 +4,47 @@ using Exiled.API.Features.Roles;
 namespace Scp999;
 public class InvisibleFeature
 {
-    public static void MakeInvisibleForPlayer(Player player)
+    public static void MakeInvisible(Player player)
     {
-        if (player.Role is FpcRole fpcRole) {
-            fpcRole.IsInvisible = true;
-        }
-        /*
-        player.ReferenceHub.transform.localScale = Vector3.zero;
-
-        foreach (Player target in Player.List)
+        foreach (Player other in Player.List)
         {
-            if (target == player)
+            if (player == other)
                 continue;
-
-            Server.SendSpawnMessage?.Invoke(null, [player.ReferenceHub.networkIdentity, target.Connection]);
+            
+            if (player.Role.Is(out FpcRole fpc))
+            {
+                fpc.IsInvisibleFor.Add(other);
+            }
         }
-
-        player.ReferenceHub.transform.localScale = scale;
-        */
+    }
+    
+    public static void MakeInvisibleForPlayer(Player scp999, Player player)
+    {
+        if (scp999.Role.Is(out FpcRole fpc))
+        {
+            fpc.IsInvisibleFor.Add(player);
+        }
     }
 
-    public static void RemoveInvisibleForPlayer(Player player)
+    public static void RemoveInvisible(Player player)
     {
-        if (player.Role is FpcRole fpcRole) {
-            fpcRole.IsInvisible = false;
+        foreach (Player other in Player.List)
+        {
+            if (player == other)
+                continue;
+            
+            if (player.Role.Is(out FpcRole fpc))
+            {
+                fpc.IsInvisibleFor.Remove(other);
+            }
+        }
+    }
+    
+    public static void RemoveInvisibleForPlayer(Player scp999, Player player)
+    {
+        if (scp999.Role.Is(out FpcRole fpc))
+        {
+            fpc.IsInvisibleFor.Remove(player);
         }
     }
 }

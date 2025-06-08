@@ -8,8 +8,8 @@ public class AudioFeature
 {
     private static List<string> _audioNameList = new()
     {
-        "yippee-tbh",
-        "yippee-tbh1"
+        "yippee-tbh1",
+        "yippee-tbh2"
     };
     
     public static void AddAudioPlayer(Player player, out AudioPlayer audioPlayer)

@@ -2,13 +2,13 @@
 using Scp999.Interfaces;
 
 namespace Scp999.Abilities;
-public class SizeAbility : Ability
+public class SizeAbility // : Ability - todo in next updates
 {
-    public override string Name => "Size";
-    public override string Description => "Change the size of a specific player";
-    public override int KeyId => 9991;
-    public override float Cooldown => 30f;
-    protected override void ActivateAbility(Player player)
+    public string Name => "Size";
+    public string Description => "Change the size of a specific player";
+    public int KeyId => 9991;
+    public float Cooldown => 30f;
+    protected void ActivateAbility(Player player)
     {
         //todo
         //Raycast

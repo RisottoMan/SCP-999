@@ -14,7 +14,7 @@ public static class AbilityFeature
         {
             try
             {
-                if (type.IsInterface || !type.GetInterfaces().Contains(typeof(IAbility)))
+                if (type.IsInterface || type.IsAbstract || !type.GetInterfaces().Contains(typeof(IAbility)))
                     continue;
 
                 var activator = Activator.CreateInstance(type) as IAbility;
@@ -48,5 +48,5 @@ public static class AbilityFeature
         }
     }
 
-    public static List<IAbility> GetAvailableAbilities => _abilityList;
+    public static List<IAbility> GetAbilities => _abilityList;
 }

@@ -1,14 +1,23 @@
-﻿using Exiled.API.Features;
+﻿using System.Collections.Generic;
+using Exiled.API.Features;
 using MapEditorReborn.API.Features.Objects;
+using Scp999.Interfaces;
 using UnityEngine;
+using Hint = HintServiceMeow.Core.Models.Hints.Hint;
 
 namespace Scp999;
 public class PlayerComponent : MonoBehaviour
 {
-    public void Awake()
+    /// <summary>
+    /// Register features for the player
+    /// </summary>
+    void Awake()
     {
         if (!Player.TryGet(gameObject, out this._player))
             return;
+        
+        // Add cooldown for abilities
+        this._player.GameObject.AddComponent<CooldownComponent>();
         
         // Register keybinds for player
         KeybindFeature.RegisterKeybindsForPlayer(this._player);
@@ -24,8 +33,10 @@ public class PlayerComponent : MonoBehaviour
         
         if (this._schematicObject is not null)
         {
+            this._player.Scale = Vector3.one * 0.75f;
+            
             // Making the player invisible to all players
-            InvisibleFeature.MakeInvisibleForPlayer(this._player);
+            InvisibleFeature.MakeInvisible(this._player);
             
             // Getting an animator from an existing schematic
             SchematicFeature.GetAnimatorFromSchematic(this._schematicObject, out this._animator);
@@ -34,8 +45,14 @@ public class PlayerComponent : MonoBehaviour
         Log.Debug($"[PlayerComponent] Custom role granted for {this._player.Nickname}");
     }
 
-    public void OnDestroy()
+    /// <summary>
+    /// Unregister features for the player
+    /// </summary>
+    void OnDestroy()
     {
+        // Destroy cooldown for abilities
+        Destroy(this._player.GameObject.GetComponent<CooldownComponent>());
+        
         // Unregister keybinds for player
         KeybindFeature.UnregisterKeybindsForPlayer(this._player);
 
@@ -48,7 +65,7 @@ public class PlayerComponent : MonoBehaviour
         if (this._schematicObject is not null)
         {
             // Remove player invisibility for all players
-            InvisibleFeature.RemoveInvisibleForPlayer(this._player);
+            InvisibleFeature.RemoveInvisible(this._player);
             
             // Remove schematic to the player
             SchematicFeature.RemoveSchematic(this._player, this._schematicObject);

@@ -179,6 +179,7 @@
         <Compile Include="Configs\Translation.cs" />
         <Compile Include="EventHandler.cs" />
         <Compile Include="Features\AudioFeature.cs" />
+        <Compile Include="Features\Components\CooldownComponent.cs" />
         <Compile Include="Features\Components\PlayerComponent.cs" />
         <Compile Include="Features\HintFeature.cs" />
         <Compile Include="Features\InvisibleFeature.cs" />

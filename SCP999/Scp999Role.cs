@@ -15,7 +15,8 @@ public class Scp999Role : CustomRole
     public override string CustomInfo { get; set; } = "SCP-999";
     public override uint Id { get; set; } = 999;
     public override int MaxHealth { get; set; } = 2000;
-    public override Vector3 Scale { get; set; } = new(.5f, .5f, .5f);
+    //public override float SpawnChance { get; set; } = 30;
+    //public override Vector3 Scale { get; set; } = new(.5f, .5f, .5f);
     public override SpawnProperties SpawnProperties { get; set; } = new()
     {
         Limit = 1,
@@ -37,14 +38,13 @@ public class Scp999Role : CustomRole
     /// <param name="player">The player who should become SCP-999</param>
     public override void AddRole(Player player)
     {
-        if (player.IsNPC || TrackedPlayers.Count >= SpawnProperties.Limit)
-            return;
-        
         // Setup of a custom role
         base.AddRole(player);
         player.Role.Set(Role, RoleSpawnFlags.None);
         player.Health = MaxHealth;
         player.IsGodModeEnabled = Plugin.Singleton.Config.IsGodModeEnabled;
+        player.CustomName = "SCP-999";
+        //player.StaminaStat.ModifyAmount(0);
         
         // Register PlayerComponent for player
         player.GameObject.AddComponent<PlayerComponent>();
@@ -56,7 +56,9 @@ public class Scp999Role : CustomRole
     /// <param name="player">A player who should become normal role</param>
     public override void RemoveRole(Player player)
     {
+        base.RemoveRole(player);
         player.Scale = Vector3.one;
+        player.CustomName = null;
         //player.Role.Set(RoleTypeId.Spectator);
         
         // Unregister PlayerComponent for player

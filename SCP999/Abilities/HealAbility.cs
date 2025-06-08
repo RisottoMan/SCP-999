@@ -8,8 +8,8 @@ public class HealAbility : Ability
     public override string Name => "Heal";
     public override string Description => "Restores health to players within a radius";
     public override int KeyId => 9993;
-    public override float Cooldown => 15f;
-
+    public override KeyCode KeyCode => KeyCode.R;
+    public override float Cooldown => 60f;
     protected override void ActivateAbility(Player player)
     {
         //Regardless of whether there is an animator or not to heal the players
@@ -22,7 +22,7 @@ public class HealAbility : Ability
             
             if (Vector3.Distance(player.Position, ply.Position) < 5f)
             {
-                player.Heal(100);
+                player.Heal(player.MaxHealth);
             }
         }
     }

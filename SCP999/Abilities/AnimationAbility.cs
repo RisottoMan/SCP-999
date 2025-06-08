@@ -5,9 +5,10 @@ using UnityEngine;
 namespace Scp999.Abilities;
 public class AnimationAbility : Ability
 {
-    public override string Name => "Random Animation";
+    public override string Name => "Dance";
     public override string Description => "Play a random funny animation";
     public override int KeyId => 9994;
+    public override KeyCode KeyCode => KeyCode.T;
     public override float Cooldown => 5f;
     protected override void ActivateAbility(Player player)
     {
