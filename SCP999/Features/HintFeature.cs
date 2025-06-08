@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 using System.Text;
 using Exiled.API.Features;
 using HintServiceMeow.Core.Enum;
@@ -11,28 +11,43 @@ public class HintFeature
 {
     public static void AddHint(Player player)
     {
-        List<IAbility> abilityList = AbilityFeature.GetAvailableAbilities;
-        StringBuilder stringBuilder = new StringBuilder();
+        var abilityList = AbilityFeature.GetAbilities.OrderBy(r => r.KeyId);
         
-        foreach (IAbility ability in abilityList)
-        {
-            stringBuilder.Append(ability.Name + "\n");
-        }
-        /*
         Hint hint = new Hint
         {
-            Text = stringBuilder.ToString(),
-            FontSize = 40,
-            YCoordinate = 700,
-            Alignment = HintAlignment.Right
+            Id = "999",
+            AutoText = arg =>
+            {
+                var cooldown = player.GameObject.GetComponent<CooldownComponent>();
+                StringBuilder stringBuilder = new StringBuilder();
+                
+                stringBuilder.Append("SCP-999 abilities:\n");
+                foreach (IAbility ability in abilityList)
+                {
+                    string color = "yellow";
+                    if (!cooldown.IsAbilityAvailable(ability.Name))
+                    {
+                        color = "red";
+                    }
+                    
+                    stringBuilder.Append($"<color={color}>{ability.Name}  [{ability.KeyCode}]</color>\n");
+                }
+                
+                return stringBuilder.ToString();
+            },
+            FontSize = 35,
+            YCoordinate = 500,
+            Alignment = HintAlignment.Right,
+            SyncSpeed = HintSyncSpeed.Normal,
         };
 
         PlayerDisplay playerDisplay = PlayerDisplay.Get(player);
-        playerDisplay.AddHint(hint);*/
+        playerDisplay.AddHint(hint);
     }
 
     public static void RemoveHint(Player player)
     {
-        //player.RemoveHint("");
+        PlayerDisplay playerDisplay = PlayerDisplay.Get(player);
+        playerDisplay.RemoveHint("999");
     }
 }
