@@ -30,6 +30,17 @@ public abstract class Ability : IAbility
         if (!Player.TryGet(referenceHub, out Player player))
             return;
         
+        // Check current animation
+        Animator animator = player.GameObject.GetComponent<PlayerComponent>().GetCurrentAnimator;
+        if (animator is not null)
+        {
+            // If the current animation is not idle, then in progress
+            // I would like the animation of the ability to stop, as otherwise it will be possible to play multiple animations at a time
+            var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            if (!stateInfo.IsName("IdleAnimation"))
+                return;
+        }
+        
         // Check cooldown for the ability
         CooldownComponent cooldown = player.GameObject.GetComponent<CooldownComponent>();
         if (!cooldown.IsAbilityAvailable(this.Name))
@@ -39,9 +50,9 @@ public abstract class Ability : IAbility
         cooldown.SetCooldownForAbility(this.Name, this.Cooldown);
         
         // Activate the ability
-        this.ActivateAbility(player);
+        this.ActivateAbility(player, animator);
         Log.Debug($"[Ability] Activating the {this.Name.ToLower()} ability");
     }
 
-    protected abstract void ActivateAbility(Player player);
+    protected abstract void ActivateAbility(Player player, Animator animator);
 }

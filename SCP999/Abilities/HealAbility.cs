@@ -9,11 +9,10 @@ public class HealAbility : Ability
     public override string Description => "Restores health to players within a radius";
     public override int KeyId => 9993;
     public override KeyCode KeyCode => KeyCode.R;
-    public override float Cooldown => 60f;
-    protected override void ActivateAbility(Player player)
+    public override float Cooldown => 5f; //60f; todo test
+    protected override void ActivateAbility(Player player, Animator animator)
     {
-        //Regardless of whether there is an animator or not to heal the players
-        this.PlayAnimation(player);
+        animator?.Play("HealthAnimation");
         
         foreach (Player ply in Player.List)
         {
@@ -25,18 +24,5 @@ public class HealAbility : Ability
                 player.Heal(player.MaxHealth);
             }
         }
-    }
-
-    private void PlayAnimation(Player player)
-    {
-        Animator animator = player.GameObject.GetComponent<PlayerComponent>().GetCurrentAnimator;
-        if (animator is null)
-            return;
-        
-        var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        if (!stateInfo.IsName("IdleAnimation"))
-            return;
-        
-        animator.Play("HealthAnimation");
     }
 }
