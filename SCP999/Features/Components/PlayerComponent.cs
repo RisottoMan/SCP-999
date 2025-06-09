@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using Exiled.API.Features;
+﻿using Exiled.API.Features;
 using MapEditorReborn.API.Features.Objects;
-using Scp999.Interfaces;
 using UnityEngine;
-using Hint = HintServiceMeow.Core.Models.Hints.Hint;
 
 namespace Scp999;
 public class PlayerComponent : MonoBehaviour

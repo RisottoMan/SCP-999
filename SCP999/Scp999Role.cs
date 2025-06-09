@@ -57,9 +57,9 @@ public class Scp999Role : CustomRole
     public override void RemoveRole(Player player)
     {
         base.RemoveRole(player);
-        player.Scale = Vector3.one;
         player.CustomName = null;
-        //player.Role.Set(RoleTypeId.Spectator);
+        player.Scale = Vector3.one;
+        player.Role.Set(RoleTypeId.Spectator);
         
         // Unregister PlayerComponent for player
         Object.Destroy(player.GameObject.GetComponent<PlayerComponent>());

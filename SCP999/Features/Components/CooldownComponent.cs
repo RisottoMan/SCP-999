@@ -7,7 +7,7 @@ public class CooldownComponent : MonoBehaviour
 {
     void Awake()
     {
-        this._abilityCooldown = AbilityFeature.GetAbilities.ToDictionary(item => item.Name, item => 0f);
+        this._abilityCooldown = AbilityManager.GetAbilities.ToDictionary(item => item.Name, item => 0f);
         InvokeRepeating(nameof(CheckCooldown), 0f, 1f);
     }
 

@@ -5,7 +5,7 @@ using Exiled.API.Features;
 using Scp999.Interfaces;
 
 namespace Scp999;
-public static class AbilityFeature
+public static class AbilityManager
 {
     private static List<IAbility> _abilityList = new();
     public static void RegisterAbilities()

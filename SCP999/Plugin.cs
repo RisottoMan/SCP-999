@@ -23,7 +23,7 @@ public class Plugin : Plugin<Config>
 
     public override void OnEnabled()
     {
-        //CosturaUtility.Initialize();
+        CosturaUtility.Initialize();
         
         Singleton = this;
         _eventHandler = new EventHandler(this);
@@ -44,14 +44,14 @@ public class Plugin : Plugin<Config>
         this.CreatePluginDirectory(AudioPath);
 
         // Register the abilities
-        AbilityFeature.RegisterAbilities();
+        AbilityManager.RegisterAbilities();
         
         base.OnEnabled();
     }
 
     public override void OnDisabled()
     {
-        AbilityFeature.UnregisterAbilities();
+        AbilityManager.UnregisterAbilities();
         
         Config.Scp999RoleConfig.Unregister();
         _harmony.UnpatchAll();

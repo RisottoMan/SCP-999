@@ -11,7 +11,7 @@ public class HintFeature
 {
     public static void AddHint(Player player)
     {
-        var abilityList = AbilityFeature.GetAbilities.OrderBy(r => r.KeyId);
+        var abilityList = AbilityManager.GetAbilities.OrderBy(r => r.KeyId);
         
         Hint hint = new Hint
         {
