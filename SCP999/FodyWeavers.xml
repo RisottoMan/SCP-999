@@ -2,9 +2,10 @@
   <Costura>
     <IncludeAssemblies>
       AudioPlayerApi
+      0Harmony
+      NVorbis
       MapEditorReborn
       HintServiceMeow-Exiled
-      0Harmony
     </IncludeAssemblies>
   </Costura>
 </Weavers>
