@@ -9,10 +9,11 @@ public class HealAbility : Ability
     public override string Description => "Pressing the button activates the restoration of health around you for all players";
     public override int KeyId => 9993;
     public override KeyCode KeyCode => KeyCode.R;
-    public override float Cooldown => 5f; //60f; todo test
-    protected override void ActivateAbility(Player player, Animator animator)
+    public override float Cooldown => 60f;
+    protected override void ActivateAbility(Player player, Animator animator, AudioPlayer audioPlayer)
     {
         animator?.Play("HealthAnimation");
+        audioPlayer.AddClip($"health");
 
         float distance = Plugin.Singleton.Config.MaxDistance;
         

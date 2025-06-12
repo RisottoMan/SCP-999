@@ -41,6 +41,15 @@ public abstract class Ability : IAbility
                 return;
         }
         
+        // Check current audio
+        AudioPlayer audioPlayer = player.GameObject.GetComponent<PlayerComponent>().GetCurrentAudioPlayer;
+        /*
+        if (audioPlayer is not null)
+        {
+            if (audioPlayer.)
+                return;
+        }*/
+        
         // Check cooldown for the ability
         CooldownComponent cooldown = player.GameObject.GetComponent<CooldownComponent>();
         if (!cooldown.IsAbilityAvailable(this.Name))
@@ -50,9 +59,9 @@ public abstract class Ability : IAbility
         cooldown.SetCooldownForAbility(this.Name, this.Cooldown);
         
         // Activate the ability
-        this.ActivateAbility(player, animator);
+        this.ActivateAbility(player, animator, audioPlayer);
         Log.Debug($"[Ability] Activating the {this.Name.ToLower()} ability");
     }
 
-    protected abstract void ActivateAbility(Player player, Animator animator);
+    protected abstract void ActivateAbility(Player player, Animator animator, AudioPlayer audioPlayer);
 }

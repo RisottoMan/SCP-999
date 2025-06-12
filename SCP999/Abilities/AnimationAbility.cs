@@ -10,9 +10,10 @@ public class AnimationAbility : Ability
     public override int KeyId => 9994;
     public override KeyCode KeyCode => KeyCode.T;
     public override float Cooldown => 5f;
-    protected override void ActivateAbility(Player player, Animator animator)
+    protected override void ActivateAbility(Player player, Animator animator, AudioPlayer audioPlayer)
     {
         int rand = Random.Range(0, 4) + 1;
         animator?.Play($"FunAnimation{rand}");
+        audioPlayer?.AddClip($"yippee-tbh1");
     }
 }

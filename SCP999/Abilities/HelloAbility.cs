@@ -10,8 +10,9 @@ public class HelloAbility : Ability
     public override int KeyId => 9992;
     public override KeyCode KeyCode => KeyCode.F;
     public override float Cooldown => 15f;
-    protected override void ActivateAbility(Player player, Animator animator)
+    protected override void ActivateAbility(Player player, Animator animator, AudioPlayer audioPlayer)
     {
         animator?.Play("HelloAnimation");
+        audioPlayer.AddClip($"hello");
     }
 }
