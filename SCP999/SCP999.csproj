@@ -32,9 +32,6 @@
         <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
           <HintPath>packages\ExMod.Exiled.9.6.0\lib\net48\Assembly-CSharp-Publicized.dll</HintPath>
         </Reference>
-        <Reference Include="AudioPlayerApi">
-          <HintPath>..\..\..\..\..\SCP Dependencies\AudioPlayerApi.dll</HintPath>
-        </Reference>
         <Reference Include="CommandSystem.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
           <HintPath>packages\ExMod.Exiled.9.6.0\lib\net48\CommandSystem.Core.dll</HintPath>
         </Reference>
@@ -61,9 +58,6 @@
         </Reference>
         <Reference Include="Exiled.Permissions, Version=9.6.0.0, Culture=neutral, processorArchitecture=Amd64">
           <HintPath>packages\ExMod.Exiled.9.6.0\lib\net48\Exiled.Permissions.dll</HintPath>
-        </Reference>
-        <Reference Include="HintServiceMeow">
-          <HintPath>..\..\..\..\..\SCP Dependencies\HintServiceMeow-Exiled.dll</HintPath>
         </Reference>
         <Reference Include="LabApi, Version=1.0.0.0, Culture=neutral, processorArchitecture=Amd64">
           <HintPath>packages\ExMod.Exiled.9.6.0\lib\net48\LabApi.dll</HintPath>
@@ -164,6 +158,8 @@
 	<Reference Include="UnityEngine.PhysicsModule" HintPath="$(SL_REFERENCES)\UnityEngine.PhysicsModule.dll" />
 	<Reference Include="MapEditorReborn" HintPath="$(SL_REFERENCES)\MapEditorReborn.dll" />
 	<Reference Include="Mirror" HintPath="$(SL_REFERENCES)\Mirror.dll" />
+	<Reference Include="AudioPlayerApi" HintPath="$(SL_REFERENCES)\AudioPlayerApi.dll" />
+	<Reference Include="HintServiceMeow" HintPath="$(SL_REFERENCES)\HintServiceMeow-Exiled.dll" />
 	<Reference Include="YamlDotNet" HintPath="$(SL_REFERENCES)\YamlDotNet.dll" />
     </ItemGroup>
     <ItemGroup>
@@ -185,7 +181,7 @@
         <Compile Include="Features\HintFeature.cs" />
         <Compile Include="Features\InvisibleFeature.cs" />
         <Compile Include="Features\KeybindFeature.cs" />
-        <Compile Include="Features\AbilityFeature.cs" />
+        <Compile Include="Features\AbilityManager.cs" />
         <Compile Include="Features\SchematicFeature.cs" />
         <Compile Include="Interfaces\Ability.cs" />
         <Compile Include="Interfaces\IAbility.cs" />
@@ -195,7 +191,6 @@
         <Compile Include="Scp999Role.cs" />
     </ItemGroup>
     <ItemGroup>
-      <None Include="App.config" />
       <None Include="packages.config" />
     </ItemGroup>
     <ItemGroup>
@@ -204,9 +199,6 @@
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <Import Project="packages\Fody.6.9.2\build\Fody.targets" Condition="Exists('packages\Fody.6.9.2\build\Fody.targets')" />
     <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-      <PropertyGroup>
-        <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105.The missing file is {0}.</ErrorText>
-      </PropertyGroup>
       <Error Condition="!Exists('packages\Fody.6.9.2\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Fody.6.9.2\build\Fody.targets'))" />
       <Error Condition="!Exists('packages\Costura.Fody.6.0.0\build\Costura.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Costura.Fody.6.0.0\build\Costura.Fody.props'))" />
       <Error Condition="!Exists('packages\Costura.Fody.6.0.0\build\Costura.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Costura.Fody.6.0.0\build\Costura.Fody.targets'))" />
