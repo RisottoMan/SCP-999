@@ -35,6 +35,21 @@ public class Scp999Role : CustomRole
     [Description("I advise you not to change it. The SCP-999 is neutral. Default: Tutorial")]
     public override RoleTypeId Role { get; set; } = RoleTypeId.Tutorial;
     
+    [Description("Broadcast after SCP-999 spawn")]
+    public override Exiled.API.Features.Broadcast Broadcast { get; set; } = new()
+    {
+        Show = true,
+        Content = "<color=orange>\ud83d\ude04 You are SCP-999 - The tickle monster! \ud83d\ude04\n" +
+                "Heal Humans, dance and calm down SCPs in facility\n" +
+               "Use abilities by clicking on the buttons</color>",
+        Duration = 15
+    };
+    
+    [Description("Broadcast after SCP-999 spawn")]
+    public override string ConsoleMessage { get; set; } = "You are SCP-999 - The tickle monster!\n" +
+                                                          "You have a lot of abilities, for example, you can heal players or dance.\n" +
+                                                          "Configure your buttons in the settings. Remove the stars.";
+    
     /// <summary>
     /// Adding the SCP-999 role to the player
     /// </summary>
@@ -45,7 +60,6 @@ public class Scp999Role : CustomRole
         base.AddRole(player);
         player.CustomName = this.CustomInfo;
         player.EnableEffect(EffectType.Disabled);
-        //player.ShowHint("Hello");
         
         // Register PlayerComponent for player
         player.GameObject.AddComponent<PlayerComponent>();
@@ -76,45 +90,38 @@ public class Scp999Role : CustomRole
     public override Dictionary<AmmoType, ushort> Ammo { get; set; }
     
     [YamlIgnore]
-    public override bool KeepPositionOnSpawn { get; set; }
+    public override bool KeepPositionOnSpawn { get; set; } = false;
     
     [YamlIgnore]
-    public override bool KeepInventoryOnSpawn { get; set; }
+    public override bool KeepInventoryOnSpawn { get; set; } = false;
     
     [YamlIgnore]
-    public override bool RemovalKillsPlayer { get; set; }
+    public override bool RemovalKillsPlayer { get; set; } = true;
     
     [YamlIgnore]
-    public override bool KeepRoleOnDeath { get; set; }
-    
-    [YamlIgnore]
-    public override float SpawnChance { get; set; }
-    
-    [YamlIgnore]
-    public override bool IgnoreSpawnSystem { get; set; }
-    
-    [YamlIgnore]
-    public override bool KeepRoleOnChangingRole { get; set; }
+    public override bool KeepRoleOnDeath { get; set; } = false;
 
+    [YamlIgnore] 
+    public override float SpawnChance { get; set; } = 0;
+    
     [YamlIgnore]
-    public override Exiled.API.Features.Broadcast Broadcast { get; set; }
+    public override bool IgnoreSpawnSystem { get; set; } = false;
+    
+    [YamlIgnore]
+    public override bool KeepRoleOnChangingRole { get; set; } = false;
 
     [YamlIgnore]
     public override bool DisplayCustomItemMessages { get; set; }
 
     [YamlIgnore]
-    public override Vector3 Scale { get; set; }
+    public override Vector3 Scale { get; set; } = Vector3.one;
 
     [YamlIgnore]
     public override Vector3? Gravity { get; set; }
     
     [YamlIgnore]
-    public override Dictionary<RoleTypeId, float> CustomRoleFFMultiplier { get; set; }
-
-    [YamlIgnore] 
-    public override string ConsoleMessage { get; set; }
+    public override Dictionary<RoleTypeId, float> CustomRoleFFMultiplier { get; set; } = new();
 
     [YamlIgnore]
     public override string AbilityUsage { get; set; }
-
 }

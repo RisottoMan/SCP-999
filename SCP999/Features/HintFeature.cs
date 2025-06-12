@@ -33,6 +33,8 @@ public class HintFeature
                     stringBuilder.Append($"<color={color}>{ability.Name}  [{ability.KeyCode}]</color>\n");
                 }
                 
+                stringBuilder.Append($"<size=20>Change binds in settings</size>");
+                
                 return stringBuilder.ToString();
             },
             FontSize = 35,

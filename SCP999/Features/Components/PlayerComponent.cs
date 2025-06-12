@@ -30,8 +30,6 @@ public class PlayerComponent : MonoBehaviour
         
         if (this._schematicObject is not null)
         {
-            this._player.Scale = Vector3.one * 0.75f;
-            
             // Making the player invisible to all players
             InvisibleFeature.MakeInvisible(this._player);
             

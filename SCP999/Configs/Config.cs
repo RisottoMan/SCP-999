@@ -26,5 +26,5 @@ public class Config : IConfig
     public int MaximumPlayers { get; set; } = 15;
 
     [Description("Configs for the SCP-999 role players turn into")]
-    public Scp999Role Scp999RoleConfig { get; set; } = new();
+    public Scp999Role Scp999RoleConfig { get; set; } = new Scp999Role();
 }
