@@ -1,8 +1,12 @@
-﻿using Exiled.API.Features;
+﻿using System;
+using System.Linq;
+using Exiled.API.Enums;
+using Exiled.API.Features;
 using Exiled.CustomRoles.API.Features;
 using Exiled.Events.EventArgs.Player;
 using Exiled.Events.EventArgs.Scp096;
 using Exiled.Events.EventArgs.Warhead;
+using Random = UnityEngine.Random;
 
 namespace Scp999;
 public class EventHandler
@@ -11,7 +15,7 @@ public class EventHandler
     public EventHandler(Plugin plugin)
     {
         _plugin = plugin;
-
+    
         Exiled.Events.Handlers.Server.RoundStarted += this.OnRoundStarted;
         Exiled.Events.Handlers.Warhead.Stopping += this.OnWarheadStop;
         Exiled.Events.Handlers.Scp096.Enraging += this.OnScpEnraging;
@@ -23,14 +27,12 @@ public class EventHandler
         Exiled.Events.Handlers.Player.Hurting += this.OnPlayerHurting;
         Exiled.Events.Handlers.Player.UsingItem += this.OnUsingItem;
         Exiled.Events.Handlers.Player.UsingItem += this.OnUsingItem;
-        Exiled.Events.Handlers.Player.InteractingDoor += this.OnInteractingDoor;
         Exiled.Events.Handlers.Player.Dying += this.OnPlayerDying;
         Exiled.Events.Handlers.Player.Left += this.OnPlayerLeft;
         Exiled.Events.Handlers.Player.Verified += this.OnPlayerVerified;
         Exiled.Events.Handlers.Player.ChangingRole += this.OnChangingRole;
         Exiled.Events.Handlers.Player.VoiceChatting += this.OnVoiceChatting;
-
-        //Exiled.Events.Handlers.Player.ChangingSpectatedPlayer += this.ChangingSpectatedPlayer;
+        Exiled.Events.Handlers.Player.ChangingSpectatedPlayer += this.ChangingSpectatedPlayer;
     }
     
     ~EventHandler()
@@ -46,45 +48,57 @@ public class EventHandler
         Exiled.Events.Handlers.Player.Hurting -= this.OnPlayerHurting;
         Exiled.Events.Handlers.Player.UsingItem -= this.OnUsingItem;
         Exiled.Events.Handlers.Player.UsingItem -= this.OnUsingItem;
-        Exiled.Events.Handlers.Player.InteractingDoor -= this.OnInteractingDoor;
         Exiled.Events.Handlers.Player.Dying -= this.OnPlayerDying;
         Exiled.Events.Handlers.Player.Left -= this.OnPlayerLeft;
         Exiled.Events.Handlers.Player.Verified -= this.OnPlayerVerified;
         Exiled.Events.Handlers.Player.ChangingRole -= this.OnChangingRole;
         Exiled.Events.Handlers.Player.VoiceChatting -= this.OnVoiceChatting;
-        
-        //Exiled.Events.Handlers.Player.ChangingSpectatedPlayer -= this.ChangingSpectatedPlayer;
+        Exiled.Events.Handlers.Player.ChangingSpectatedPlayer -= this.ChangingSpectatedPlayer;
     }
     
     /// <summary>
-    /// The logic of choosing SCP-999 if the round is started
+    /// Logic of choosing SCP-999 if the round is started
     /// </summary>
     private void OnRoundStarted()
     {
         Scp999Role? customRole = CustomRole.Get(typeof(Scp999Role)) as Scp999Role;
-        
-        foreach (Player player in Player.List)
-        {
-            // If there is no SCP-999 in the game, then add
-            if (customRole!.TrackedPlayers.Count >= customRole.SpawnProperties.Limit)
-                return;
-            
-            // The player already has a role
-            if (customRole.Check(player))
-                return;
 
-            // The player is an NPC
-            if (player.IsNPC && player.Nickname != "SCP-999")
-                return;
+        // Minimum and maximum number of Players for the chance of SCP-999 appearing
+        float min = _plugin.Config.MinimumPlayers;
+        float max = _plugin.Config.MaximumPlayers;
+        
+        // Add SCP-999 if no in the game
+        if (customRole!.TrackedPlayers.Count >= customRole.SpawnProperties.Limit)
+            return;
+        
+        for (int i = 0; i < customRole.SpawnProperties.Limit; i++)
+        {
+            // List of people who could potentially become SCP-999
+            var players = Player.List.Where(r => r.IsHuman && !r.IsNPC && !r.HasCustomName).ToList();
             
-            // Checking the chance to spawn
-            if (UnityEngine.Random.Range(0, 100) > customRole.SpawnChance)
+            // A minimum of players is required
+            if (players.Count < min)
                 return;
+        
+            // The formula for the chance of SCP-999 appearing in a round depends on count of players
+            float value = Math.Max(min, Math.Min(max, Player.List.Count));
+            float chance = (value - min) / (max - min);
             
-            customRole.AddRole(player);
+            // Checking the chance to spawn in current round
+            float randomValue = Random.value;
+
+            Log.Debug($"[OnRoundStarted] Spawn chance {randomValue} >= {chance}");
+            
+            if (randomValue >= chance)
+                return;
+        
+            // Choosing a random player
+            Player randomPlayer = players.RandomItem();
+        
+            customRole!.AddRole(randomPlayer);
         }
     }
-    
+
     /// <summary>
     /// Allow the use of abilities for SCP-999
     /// </summary>
@@ -95,26 +109,23 @@ public class EventHandler
             ev.IsAllowed = false;
         }
     }
-    
+
     /// <summary>
-    /// The mechanics of opening doors
-    /// </summary>
-    private void OnInteractingDoor(InteractingDoorEventArgs ev)
-    {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
-        {
-            ev.IsAllowed = false;
-        }
-    }
-    
-    /// <summary>
-    /// Allow the attacker to show the hitmarker
+    /// Block any damage from players
     /// </summary>
     private void OnPlayerHurting(HurtingEventArgs ev)
     {
         if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
         {
-            ev.IsAllowed = false;
+            if (!_plugin.Config.IsPlayerCanHurt && ev.Attacker is not null)
+            {
+                ev.IsAllowed = false;
+            }
+
+            if (ev.DamageHandler.Type == DamageType.Decontamination)
+            {
+                ev.Amount = 300;
+            }
         }
     }
     
@@ -152,7 +163,7 @@ public class EventHandler
     }
     
     /// <summary>
-    /// If the player leaves the game, then delete his instance
+    /// If the player leaves the game, remove SCP-999
     /// </summary>
     private void OnPlayerLeft(LeftEventArgs ev)
     {
@@ -163,14 +174,14 @@ public class EventHandler
     }
     
     /// <summary>
-    /// If a player has changed his class, then delete his instance
+    /// This event is triggered if the player dies or the admin changes his role
+    /// This is a convenient event to remove a SCP-999
     /// </summary>
     private void OnChangingRole(ChangingRoleEventArgs ev)
     {
-        //Log.Debug("Player change role");
         if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
         {
-            //CustomRole.Get(typeof(Scp999Role))!.RemoveRole(ev.Player);
+            CustomRole.Get(typeof(Scp999Role))!.RemoveRole(ev.Player);
         }
     }
     
@@ -231,6 +242,7 @@ public class EventHandler
 
     /// <summary>
     /// Does not allow SCP-999 to talk in voice chat
+    /// SCP-999 becomes invisible to other clients. So he won't be able to talk anyway
     /// </summary>
     private void OnVoiceChatting(VoiceChattingEventArgs ev)
     {
@@ -245,29 +257,28 @@ public class EventHandler
     /// </summary>
     private void OnPlayerVerified(VerifiedEventArgs ev)
     {
-        foreach (Player scp999 in Player.List)
+        var scp999Role = CustomRole.Get(typeof(Scp999Role));
+        foreach (Player scp999 in scp999Role!.TrackedPlayers)
         {
-            if (CustomRole.Get(typeof(Scp999Role)).Check(scp999))
-            {
-                InvisibleFeature.MakeInvisibleForPlayer(scp999, ev.Player);
-            }
+            InvisibleFeature.MakeInvisibleForPlayer(scp999, ev.Player);
         }
     }
-
+    
+    /// <summary>
+    /// Spectators should see SCP-999 in the first person, unlike other players
+    /// It works with a delay from the server
+    /// </summary>
     private void ChangingSpectatedPlayer(ChangingSpectatedPlayerEventArgs ev)
     {
-        Log.Error($"{ev.Player.Nickname} {ev.NewTarget} {ev.OldTarget}");
         var scp999Role = CustomRole.Get(typeof(Scp999Role));
         
-        if (scp999Role.Check(ev.NewTarget))
+        if (scp999Role!.Check(ev.NewTarget))
         {
-            Log.Error($"remove {ev.NewTarget.CustomName}");
             InvisibleFeature.RemoveInvisibleForPlayer(ev.NewTarget, ev.Player);
         }
         
-        if (scp999Role.Check(ev.OldTarget))
+        if (scp999Role!.Check(ev.OldTarget))
         {
-            Log.Error($"make {ev.NewTarget.CustomName}");
             InvisibleFeature.MakeInvisibleForPlayer(ev.OldTarget, ev.Player);
         }
     }
