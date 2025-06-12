@@ -3,6 +3,7 @@ using Exiled.CustomRoles.API.Features;
 using PlayerRoles;
 using UnityEngine;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Exiled.API.Features.Spawn;
 using Exiled.API.Enums;
 using YamlDotNet.Serialization;
@@ -11,12 +12,14 @@ namespace Scp999;
 public class Scp999Role : CustomRole
 {
     public override string Name { get; set; } = "SCP-999";
-    public override string Description { get; set; } = "The tickle monster.";
+    public override string Description { get; set; } = "The tickle monster";
+    
+    [Description("The custom tag that you can change. Default: SCP-999")]
     public override string CustomInfo { get; set; } = "SCP-999";
     public override uint Id { get; set; } = 999;
     public override int MaxHealth { get; set; } = 2000;
-    //public override float SpawnChance { get; set; } = 30;
-    //public override Vector3 Scale { get; set; } = new(.5f, .5f, .5f);
+    
+    [Description("You can choose your own spawn location. You can also increase the number of SCP-999 per round. Default: 1")]
     public override SpawnProperties SpawnProperties { get; set; } = new()
     {
         Limit = 1,
@@ -29,7 +32,7 @@ public class Scp999Role : CustomRole
         }
     };
     
-    [YamlIgnore]
+    [Description("I advise you not to change it. The SCP-999 is neutral. Default: Tutorial")]
     public override RoleTypeId Role { get; set; } = RoleTypeId.Tutorial;
     
     /// <summary>
@@ -40,11 +43,9 @@ public class Scp999Role : CustomRole
     {
         // Setup of a custom role
         base.AddRole(player);
-        player.Role.Set(Role, RoleSpawnFlags.None);
-        player.Health = MaxHealth;
-        player.IsGodModeEnabled = Plugin.Singleton.Config.IsGodModeEnabled;
-        player.CustomName = "SCP-999";
-        //player.StaminaStat.ModifyAmount(0);
+        player.CustomName = this.CustomInfo;
+        player.EnableEffect(EffectType.Disabled);
+        //player.ShowHint("Hello");
         
         // Register PlayerComponent for player
         player.GameObject.AddComponent<PlayerComponent>();
@@ -56,12 +57,64 @@ public class Scp999Role : CustomRole
     /// <param name="player">A player who should become normal role</param>
     public override void RemoveRole(Player player)
     {
+        // Remove a custom role
         base.RemoveRole(player);
         player.CustomName = null;
-        player.Scale = Vector3.one;
-        player.Role.Set(RoleTypeId.Spectator);
         
         // Unregister PlayerComponent for player
         Object.Destroy(player.GameObject.GetComponent<PlayerComponent>());
     }
+    
+    // These are unnecessary parameters that I don't want to put in the config
+    [YamlIgnore]
+    public override List<string> Inventory { get; set; }
+    
+    [YamlIgnore]
+    public override List<CustomAbility> CustomAbilities { get; set; }
+    
+    [YamlIgnore]
+    public override Dictionary<AmmoType, ushort> Ammo { get; set; }
+    
+    [YamlIgnore]
+    public override bool KeepPositionOnSpawn { get; set; }
+    
+    [YamlIgnore]
+    public override bool KeepInventoryOnSpawn { get; set; }
+    
+    [YamlIgnore]
+    public override bool RemovalKillsPlayer { get; set; }
+    
+    [YamlIgnore]
+    public override bool KeepRoleOnDeath { get; set; }
+    
+    [YamlIgnore]
+    public override float SpawnChance { get; set; }
+    
+    [YamlIgnore]
+    public override bool IgnoreSpawnSystem { get; set; }
+    
+    [YamlIgnore]
+    public override bool KeepRoleOnChangingRole { get; set; }
+
+    [YamlIgnore]
+    public override Exiled.API.Features.Broadcast Broadcast { get; set; }
+
+    [YamlIgnore]
+    public override bool DisplayCustomItemMessages { get; set; }
+
+    [YamlIgnore]
+    public override Vector3 Scale { get; set; }
+
+    [YamlIgnore]
+    public override Vector3? Gravity { get; set; }
+    
+    [YamlIgnore]
+    public override Dictionary<RoleTypeId, float> CustomRoleFFMultiplier { get; set; }
+
+    [YamlIgnore] 
+    public override string ConsoleMessage { get; set; }
+
+    [YamlIgnore]
+    public override string AbilityUsage { get; set; }
+
 }
