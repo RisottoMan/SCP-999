@@ -1,4 +1,7 @@
-﻿using Exiled.API.Features;
+﻿using System.Collections.Generic;
+using CustomPlayerEffects;
+using Exiled.API.Features;
+using MEC;
 using Scp999.Interfaces;
 using UnityEngine;
 
@@ -14,6 +17,25 @@ public class AnimationAbility : Ability
     {
         int rand = Random.Range(0, 4) + 1;
         animator?.Play($"FunAnimation{rand}");
-        audioPlayer?.AddClip($"yippee-tbh1");
+        //audioPlayer?.AddClip($"yippee-tbh1");
+        player.EnableEffect<Ensnared>(30f);
+        
+        Timing.RunCoroutine(this.CheckEndOfAnimation(player, animator));
+    }
+
+    private IEnumerator<float> CheckEndOfAnimation(Player player, Animator animator)
+    {
+        yield return Timing.WaitForSeconds(0.1f);
+        while (true)
+        {
+            var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            if (stateInfo.IsName("IdleAnimation"))
+            {
+                player.DisableEffect<Ensnared>();
+                yield break;
+            }
+            
+            yield return Timing.WaitForSeconds(0.5f);
+        }
     }
 }

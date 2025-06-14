@@ -1,4 +1,5 @@
-﻿using Exiled.API.Features;
+﻿using CustomPlayerEffects;
+using Exiled.API.Features;
 using Scp999.Interfaces;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ public class HelloAbility : Ability
     protected override void ActivateAbility(Player player, Animator animator, AudioPlayer audioPlayer)
     {
         animator?.Play("HelloAnimation");
-        audioPlayer.AddClip($"hello");
+        player.EnableEffect<Ensnared>(3f);
+        //audioPlayer.AddClip($"hello");
     }
 }

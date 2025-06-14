@@ -1,4 +1,7 @@
-﻿using Exiled.API.Features;
+﻿using System.Collections.Generic;
+using CustomPlayerEffects;
+using Exiled.API.Features;
+using MEC;
 using Scp999.Interfaces;
 using UnityEngine;
 
@@ -26,6 +29,22 @@ public class HealAbility : Ability
             {
                 player.Heal(player.MaxHealth);
             }
+        }
+    }
+    
+    private IEnumerator<float> CheckEndOfAnimation(Player player, Animator animator)
+    {
+        yield return Timing.WaitForSeconds(0.1f);
+        while (true)
+        {
+            var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            if (stateInfo.IsName("IdleAnimation"))
+            {
+                player.DisableEffect<Ensnared>();
+                yield break;
+            }
+            
+            yield return Timing.WaitForSeconds(0.5f);
         }
     }
 }
