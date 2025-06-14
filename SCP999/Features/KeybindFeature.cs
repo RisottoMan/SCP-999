@@ -13,21 +13,23 @@ public class KeybindFeature
         if (_settings is null)
         {
             var settings = new List<SettingBase>();
-        
+            
             var header = new HeaderSetting(
                 name: "Abilities of SCP-999",
                 hintDescription: "Abilities of SCP-999",
                 paddling: false
             );
-
+            
+            settings.Add(header);
+            
             foreach (var ability in AbilityManager.GetAbilities.OrderBy(r => r.KeyId))
             {
                 var keybindSetting = new KeybindSetting(
                     id: ability.KeyId,
                     label: ability.Name,
                     suggested: ability.KeyCode,
-                    hintDescription: ability.Description,
-                    header: header
+                    hintDescription: ability.Description
+                    //header: header
                 );
 
                 settings.Add(keybindSetting);
