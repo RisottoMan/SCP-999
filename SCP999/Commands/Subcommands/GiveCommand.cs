@@ -31,6 +31,12 @@ public class GiveCommand : ICommand
             response = "Custom role SCP-999 role not found or not registered";
             return false;
         }
+
+        if (scp999Role.Check(player))
+        {
+            response = "The player already have the custom role SCP-999";
+            return false;
+        }
         
         scp999Role.AddRole(player);
         response = $"<color=green>Custom role SCP-999 granted for {player.Nickname}</color>";

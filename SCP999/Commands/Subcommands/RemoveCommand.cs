@@ -31,6 +31,12 @@ public class RemoveCommand : ICommand
             return false;
         }
         
+        if (!scp999Role.Check(player))
+        {
+            response = "The player does not have the custom role SCP-999";
+            return false;
+        }
+        
         scp999Role.RemoveRole(player);
         response = $"<color=green>Custom role SCP-999 removed for {player.Nickname}</color>";
         return true;
