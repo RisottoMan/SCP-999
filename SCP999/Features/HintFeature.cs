@@ -21,19 +21,22 @@ public class HintFeature
                 var cooldown = player.GameObject.GetComponent<CooldownComponent>();
                 StringBuilder stringBuilder = new StringBuilder();
                 
-                stringBuilder.Append("SCP-999 abilities:\n");
+                stringBuilder.Append("<size=50><color=#ffa500>\ud83d\ude06 <b>SCP-999</b></color></size>\n");
+                stringBuilder.Append("Abilities:\n");
+                
                 foreach (IAbility ability in abilityList)
                 {
-                    string color = "yellow";
+                    string color = "#ffa500";
                     if (!cooldown.IsAbilityAvailable(ability.Name))
                     {
-                        color = "red";
+                        color = "#966100";
                     }
                     
                     stringBuilder.Append($"<color={color}>{ability.Name}  [{ability.KeyCode}]</color>\n");
                 }
                 
-                stringBuilder.Append($"<size=20>Change binds in settings</size>");
+                stringBuilder.Append($"\n<size=18>if you cant use abilities\n" +
+                                     $"remove \u2b50 in settings</size>");
                 
                 return stringBuilder.ToString();
             },
