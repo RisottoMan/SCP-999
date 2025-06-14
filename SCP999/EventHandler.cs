@@ -115,17 +115,25 @@ public class EventHandler
     /// </summary>
     private void OnPlayerHurting(HurtingEventArgs ev)
     {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
+        if (!CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
+            return;
+        
+        // Disable damage from players
+        if (!_plugin.Config.IsPlayerCanHurt && ev.Attacker is not null)
         {
-            if (!_plugin.Config.IsPlayerCanHurt && ev.Attacker is not null)
-            {
-                ev.IsAllowed = false;
-            }
+            ev.IsAllowed = false;
+        }
 
-            if (ev.DamageHandler.Type == DamageType.Decontamination)
-            {
-                ev.Amount = 300;
-            }
+        // Disable car damage
+        if (ev.DamageHandler.Type == DamageType.Crushed)
+        {
+            ev.IsAllowed = false;
+        }
+            
+        // Increase damage from decontamination
+        if (ev.DamageHandler.Type == DamageType.Decontamination)
+        {
+            ev.Amount = 300;
         }
     }
     
