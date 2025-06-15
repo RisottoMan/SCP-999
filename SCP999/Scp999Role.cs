@@ -4,8 +4,10 @@ using PlayerRoles;
 using UnityEngine;
 using System.Collections.Generic;
 using System.ComponentModel;
+using CustomPlayerEffects;
 using Exiled.API.Features.Spawn;
 using Exiled.API.Enums;
+using MEC;
 using YamlDotNet.Serialization;
 
 namespace Scp999;
@@ -16,7 +18,7 @@ public class Scp999Role : CustomRole
     
     [Description("The custom tag that you can change. Default: SCP-999")]
     public override string CustomInfo { get; set; } = "SCP-999";
-    public override uint Id { get; set; } = 999;
+    public override uint Id { get; set; } = 9999;
     public override int MaxHealth { get; set; } = 2000;
     
     [Description("You can choose your own spawn location. You can also increase the number of SCP-999 per round. Default: 1")]
@@ -39,7 +41,7 @@ public class Scp999Role : CustomRole
     public override Exiled.API.Features.Broadcast Broadcast { get; set; } = new()
     {
         Show = true,
-        Content = "<color=orange>\ud83d\ude04 You are SCP-999 - The tickle monster! \ud83d\ude04\n" +
+        Content = "<color=#ffa500>\ud83d\ude04 You are SCP-999 - The tickle monster! \ud83d\ude04\n" +
                 "Heal Humans, dance and calm down SCPs in facility\n" +
                "Use abilities by clicking on the buttons</color>",
         Duration = 15
@@ -59,7 +61,12 @@ public class Scp999Role : CustomRole
         // Setup of a custom role
         base.AddRole(player);
         player.CustomName = this.CustomInfo;
-        player.EnableEffect(EffectType.Disabled);
+        player.EnableEffect<Disabled>();
+        
+        Timing.CallDelayed(0.1f, () =>
+        {
+            player.EnableEffect<Ghostly>();
+        });
         
         // Register PlayerComponent for player
         player.GameObject.AddComponent<PlayerComponent>();
@@ -90,10 +97,10 @@ public class Scp999Role : CustomRole
     public override Dictionary<AmmoType, ushort> Ammo { get; set; }
     
     [YamlIgnore]
-    public override bool KeepPositionOnSpawn { get; set; } = false;
+    public override bool KeepPositionOnSpawn { get; set; } = true;
     
     [YamlIgnore]
-    public override bool KeepInventoryOnSpawn { get; set; } = false;
+    public override bool KeepInventoryOnSpawn { get; set; } = true;
     
     [YamlIgnore]
     public override bool RemovalKillsPlayer { get; set; } = true;
@@ -105,7 +112,7 @@ public class Scp999Role : CustomRole
     public override float SpawnChance { get; set; } = 0;
     
     [YamlIgnore]
-    public override bool IgnoreSpawnSystem { get; set; } = false;
+    public override bool IgnoreSpawnSystem { get; set; } = true;
     
     [YamlIgnore]
     public override bool KeepRoleOnChangingRole { get; set; } = false;
