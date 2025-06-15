@@ -5,7 +5,9 @@ using Exiled.API.Features;
 using Exiled.CustomRoles.API.Features;
 using Exiled.Events.EventArgs.Player;
 using Exiled.Events.EventArgs.Scp096;
+using Exiled.Events.EventArgs.Server;
 using Exiled.Events.EventArgs.Warhead;
+using MEC;
 using Random = UnityEngine.Random;
 
 namespace Scp999;
@@ -31,8 +33,7 @@ public class EventHandler
         Exiled.Events.Handlers.Player.Left += this.OnPlayerLeft;
         Exiled.Events.Handlers.Player.Verified += this.OnPlayerVerified;
         Exiled.Events.Handlers.Player.ChangingRole += this.OnChangingRole;
-        Exiled.Events.Handlers.Player.VoiceChatting += this.OnVoiceChatting;
-        Exiled.Events.Handlers.Player.ChangingSpectatedPlayer += this.ChangingSpectatedPlayer;
+        Exiled.Events.Handlers.Player.ChangingSpectatedPlayer += this.OnChangingSpectatedPlayer;
     }
     
     ~EventHandler()
@@ -52,8 +53,7 @@ public class EventHandler
         Exiled.Events.Handlers.Player.Left -= this.OnPlayerLeft;
         Exiled.Events.Handlers.Player.Verified -= this.OnPlayerVerified;
         Exiled.Events.Handlers.Player.ChangingRole -= this.OnChangingRole;
-        Exiled.Events.Handlers.Player.VoiceChatting -= this.OnVoiceChatting;
-        Exiled.Events.Handlers.Player.ChangingSpectatedPlayer -= this.ChangingSpectatedPlayer;
+        Exiled.Events.Handlers.Player.ChangingSpectatedPlayer -= this.OnChangingSpectatedPlayer;
     }
     
     /// <summary>
@@ -94,8 +94,11 @@ public class EventHandler
         
             // Choosing a random player
             Player randomPlayer = players.RandomItem();
-        
-            customRole!.AddRole(randomPlayer);
+
+            Timing.CallDelayed(0.1f, () =>
+            {
+                customRole!.AddRole(randomPlayer);
+            });
         }
     }
 
@@ -187,9 +190,17 @@ public class EventHandler
     /// </summary>
     private void OnChangingRole(ChangingRoleEventArgs ev)
     {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
+        var scp999Role = CustomRole.Get(typeof(Scp999Role));
+        
+        if (scp999Role!.Check(ev.Player))
         {
-            CustomRole.Get(typeof(Scp999Role))!.RemoveRole(ev.Player);
+            scp999Role!.RemoveRole(ev.Player);
+            return;
+        }
+        
+        foreach (Player scp999 in scp999Role!.TrackedPlayers)
+        {
+            InvisibleFeature.MakeInvisibleForPlayer(scp999, ev.Player);
         }
     }
     
@@ -247,18 +258,6 @@ public class EventHandler
             ev.IsAllowed = false;
         }
     }
-
-    /// <summary>
-    /// Does not allow SCP-999 to talk in voice chat
-    /// SCP-999 becomes invisible to other clients. So he won't be able to talk anyway
-    /// </summary>
-    private void OnVoiceChatting(VoiceChattingEventArgs ev)
-    {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
-        {
-            ev.IsAllowed = false;
-        }
-    }
     
     /// <summary>
     /// If a player has spawned with a new role, then delete his instance
@@ -276,7 +275,7 @@ public class EventHandler
     /// Spectators should see SCP-999 in the first person, unlike other players
     /// It works with a delay from the server
     /// </summary>
-    private void ChangingSpectatedPlayer(ChangingSpectatedPlayerEventArgs ev)
+    private void OnChangingSpectatedPlayer(ChangingSpectatedPlayerEventArgs ev)
     {
         var scp999Role = CustomRole.Get(typeof(Scp999Role));
         
