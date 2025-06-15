@@ -152,11 +152,12 @@
         <Reference Include="System.Xml.ReaderWriter, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <HintPath>packages\System.Xml.ReaderWriter.4.3.0\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
         </Reference>
+	<Reference Include="Assembly-CSharp-firstpass" HintPath="$(SL_REFERENCES)\Assembly-CSharp-firstpass.dll" />
 	<Reference Include="UnityEngine" HintPath="$(SL_REFERENCES)\UnityEngine.dll" />
 	<Reference Include="UnityEngine.AnimationModule" HintPath="$(SL_REFERENCES)\UnityEngine.AnimationModule.dll" />
 	<Reference Include="UnityEngine.CoreModule" HintPath="$(SL_REFERENCES)\UnityEngine.CoreModule.dll" />
 	<Reference Include="UnityEngine.PhysicsModule" HintPath="$(SL_REFERENCES)\UnityEngine.PhysicsModule.dll" />
-	<Reference Include="MapEditorReborn" HintPath="$(SL_REFERENCES)\MapEditorReborn.dll" />
+	<Reference Include="ProjectMER" HintPath="$(SL_REFERENCES)\ProjectMER.dll" />
 	<Reference Include="Mirror" HintPath="$(SL_REFERENCES)\Mirror.dll" />
 	<Reference Include="AudioPlayerApi" HintPath="$(SL_REFERENCES)\AudioPlayerApi.dll" />
 	<Reference Include="HintServiceMeow" HintPath="$(SL_REFERENCES)\HintServiceMeow-Exiled.dll" />
@@ -175,6 +176,7 @@
         <Compile Include="EventHandler.cs" />
         <Compile Include="Features\AudioFeature.cs" />
         <Compile Include="Features\Components\CooldownComponent.cs" />
+        <Compile Include="Features\Components\MoveComponent.cs" />
         <Compile Include="Features\Components\PlayerComponent.cs" />
         <Compile Include="Features\HintFeature.cs" />
         <Compile Include="Features\InvisibleFeature.cs" />

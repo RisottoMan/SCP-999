@@ -29,11 +29,13 @@ public class AudioFeature
             // This created speaker will be in 3D space.
             Speaker speaker = p.AddSpeaker("Scp999-Main", isSpatial: true, minDistance: 5f, maxDistance: 15f);
 
+            /*
             // Attach created speaker to player.
             speaker.transform.parent = player.GameObject.transform;
 
             // Set local position to zero to make sure that speaker is in player.
             speaker.transform.localPosition = Vector3.zero;
+            */
         });
 
         LoadAudioFiles();

@@ -1,5 +1,5 @@
 ﻿using Exiled.API.Features;
-using MapEditorReborn.API.Features.Objects;
+using ProjectMER.Features.Objects;
 using UnityEngine;
 
 namespace Scp999;
@@ -12,9 +12,6 @@ public class PlayerComponent : MonoBehaviour
     {
         if (!Player.TryGet(gameObject, out this._player))
             return;
-        
-        // Add cooldown for abilities
-        this._player.GameObject.AddComponent<CooldownComponent>();
         
         // Register keybinds for player
         KeybindFeature.RegisterKeybindsForPlayer(this._player);
@@ -37,6 +34,10 @@ public class PlayerComponent : MonoBehaviour
             SchematicFeature.GetAnimatorFromSchematic(this._schematicObject, out this._animator);
         }
         
+        // Add components to the player
+        this._player.GameObject.AddComponent<CooldownComponent>();
+        this._player.GameObject.AddComponent<MoveComponent>();
+        
         Log.Debug($"[PlayerComponent] Custom role granted for {this._player.Nickname}");
     }
 
@@ -45,8 +46,9 @@ public class PlayerComponent : MonoBehaviour
     /// </summary>
     void OnDestroy()
     {
-        // Destroy cooldown for abilities
+        // Destroy components
         Destroy(this._player.GameObject.GetComponent<CooldownComponent>());
+        Destroy(this._player.GameObject.GetComponent<MoveComponent>());
         
         // Unregister keybinds for player
         KeybindFeature.UnregisterKeybindsForPlayer(this._player);

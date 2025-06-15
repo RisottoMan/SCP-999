@@ -1,7 +1,7 @@
 ﻿using System;
 using Exiled.API.Features;
-using MapEditorReborn.API.Features;
-using MapEditorReborn.API.Features.Objects;
+using ProjectMER.Features;
+using ProjectMER.Features.Objects;
 using UnityEngine;
 
 namespace Scp999;
@@ -11,18 +11,19 @@ public class SchematicFeature
     {
         try
         {
-            schematicObject = ObjectSpawner.SpawnSchematic("SCP999", Vector3.zero, Quaternion.identity, Vector3.one,null);
+            schematicObject = ObjectSpawner.SpawnSchematic("SCP999", player.Position, player.Rotation, Vector3.one);
         }
         catch (Exception ex)
         {
             Log.Error($"An error occurred when loading schematics: {ex}");
             schematicObject = null;
-            return;
         }
-        
+
+        /*
         schematicObject.transform.parent = player.Transform;
         schematicObject.transform.rotation = new Quaternion();
         schematicObject.transform.position = player.Position + new Vector3(0, -0.75f, 0);
+        */
     }
 
     public static void RemoveSchematic(Player player, SchematicObject schematicObject)
