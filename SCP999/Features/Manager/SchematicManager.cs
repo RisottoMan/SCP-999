@@ -32,8 +32,8 @@ public class SchematicManager
         schematicObject.transform.rotation = new Quaternion();
         schematicObject.transform.position = player.Position + new Vector3(0, -0.75f, 0);
 
-        player.Scale = new Vector3(0.00001f, 1, 0.00001f);
-        schematicObject.transform.localScale = new Vector3(100000f, 1, 100000f);
+        //player.Scale = new Vector3(0.00001f, 1, 0.00001f);
+        //schematicObject.transform.localScale = new Vector3(100000f, 1, 100000f);
     }
 
     public static void RemoveSchematic(Player player, SchematicObject schematicObject)

@@ -2,6 +2,7 @@
 using System.Linq;
 using Exiled.API.Enums;
 using Exiled.API.Features;
+using Exiled.CustomRoles.API;
 using Exiled.CustomRoles.API.Features;
 using Exiled.Events.EventArgs.Player;
 using Exiled.Events.EventArgs.Scp096;
@@ -51,17 +52,9 @@ public class EventHandler
     }
     
     /// <summary>
-    /// After starting the round, select SCP-999
-    /// </summary>
-    private void OnRoundStarted()
-    {
-        Timing.CallDelayed(0.1f, this.SpawnRandomPlayer);
-    }
-
-    /// <summary>
     /// Logic of choosing SCP-999 if the round is started
     /// </summary>
-    private void SpawnRandomPlayer()
+    private void OnRoundStarted()
     {
         Scp999Role customRole = CustomRole.Get(9999) as Scp999Role;
 
@@ -82,8 +75,7 @@ public class EventHandler
         for (int i = 0; i < customRole.SpawnProperties.Limit; i++)
         {
             // List of people who could potentially become SCP-999
-            var players = Player.List.Where(r => r.IsHuman && !r.IsNPC && !r.HasCustomName).ToList();
-            
+            var players = Player.List.Where(r => r.IsHuman && !r.IsNPC && r.CustomInfo == null).ToList();
             // A minimum of players is required
             if (players.Count < min)
                 return;
@@ -99,11 +91,11 @@ public class EventHandler
             
             if (randomValue >= chance)
                 return;
-        
+            
             // Choosing a random player
             Player randomPlayer = players.RandomItem();
 
-            Timing.CallDelayed(0.1f, () =>
+            Timing.CallDelayed(0.05f, () =>
             {
                 customRole!.AddRole(randomPlayer);
             });
