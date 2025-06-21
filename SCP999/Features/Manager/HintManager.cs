@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text;
 using Exiled.API.Features;
 using HintServiceMeow.Core.Enum;
@@ -6,11 +7,18 @@ using HintServiceMeow.Core.Utilities;
 using Scp999.Interfaces;
 using Hint = HintServiceMeow.Core.Models.Hints.Hint;
 
-namespace Scp999;
-public class HintFeature
+namespace Scp999.Features.Manager;
+public class HintManager
 {
     public static void AddHint(Player player)
     {
+        // Checking that the HintServiceMeow plugin is loaded on the server
+        if (!AppDomain.CurrentDomain.GetAssemblies().Any(x => x.FullName.ToLower().Contains("hintservicemeow")))
+        {
+            Log.Error("HintServiceMeow is not installed. There is no way to give the player a hint.");
+            return;
+        }
+        
         var abilityList = AbilityManager.GetAbilities.OrderBy(r => r.KeyId);
         
         Hint hint = new Hint
@@ -18,7 +26,7 @@ public class HintFeature
             Id = "999",
             AutoText = arg =>
             {
-                var cooldown = player.GameObject.GetComponent<CooldownComponent>();
+                var assembler = player.GameObject.GetComponent<PlayerAssembler>();
                 StringBuilder stringBuilder = new StringBuilder();
                 
                 stringBuilder.Append("<size=50><color=#ffa500>\ud83d\ude06 <b>SCP-999</b></color></size>\n");
@@ -27,7 +35,7 @@ public class HintFeature
                 foreach (IAbility ability in abilityList)
                 {
                     string color = "#ffa500";
-                    if (!cooldown.IsAbilityAvailable(ability.Name))
+                    if (!assembler.IsAbilityAvailable(ability.Name))
                     {
                         color = "#966100";
                     }

@@ -1,4 +1,5 @@
 ﻿using Exiled.API.Features;
+using Scp999.Features;
 using UnityEngine;
 using UserSettings.ServerSpecific;
 
@@ -29,9 +30,11 @@ public abstract class Ability : IAbility
         // Check player
         if (!Player.TryGet(referenceHub, out Player player))
             return;
+
+        PlayerAssembler assembler = player.GameObject.GetComponent<PlayerAssembler>();
         
         // Check current animation
-        Animator animator = player.GameObject.GetComponent<PlayerComponent>().GetCurrentAnimator;
+        Animator animator = assembler.GetCurrentAnimator;
         if (animator is not null)
         {
             // If the current animation is not idle, then in progress
@@ -42,7 +45,7 @@ public abstract class Ability : IAbility
         }
         
         // Check current audio
-        AudioPlayer audioPlayer = player.GameObject.GetComponent<PlayerComponent>().GetCurrentAudioPlayer;
+        AudioPlayer audioPlayer = assembler.GetCurrentAudioPlayer;
         /*
         if (audioPlayer is not null)
         {
@@ -51,12 +54,11 @@ public abstract class Ability : IAbility
         }*/
         
         // Check cooldown for the ability
-        CooldownComponent cooldown = player.GameObject.GetComponent<CooldownComponent>();
-        if (!cooldown.IsAbilityAvailable(this.Name))
+        if (!assembler.IsAbilityAvailable(this.Name))
             return;
         
         // Set a cooldown for the ability
-        cooldown.SetCooldownForAbility(this.Name, this.Cooldown);
+        assembler.SetCooldownForAbility(this.Name, this.Cooldown);
         
         // Activate the ability
         this.ActivateAbility(player, animator, audioPlayer);

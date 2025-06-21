@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using Exiled.API.Interfaces;
+using Scp999.Features;
 
 namespace Scp999;
 public class Config : IConfig
@@ -26,5 +27,5 @@ public class Config : IConfig
     public int MaximumPlayers { get; set; } = 15;
 
     [Description("Configs for the SCP-999 role players turn into")]
-    public Scp999Role Scp999RoleConfig { get; set; } = new Scp999Role();
+    public Scp999Role Scp999RoleConfig { get; set; } = new();
 }

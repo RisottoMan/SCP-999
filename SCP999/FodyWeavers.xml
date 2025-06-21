@@ -4,8 +4,6 @@
       AudioPlayerApi
       0Harmony
       NVorbis
-      ProjectMER
-      HintServiceMeow-Exiled
     </IncludeAssemblies>
   </Costura>
 </Weavers>

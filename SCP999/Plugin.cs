@@ -3,6 +3,7 @@ using System.IO;
 using HarmonyLib;
 using Exiled.CustomRoles.API;
 using Exiled.API.Features;
+using Scp999.Features.Manager;
 
 namespace Scp999;
 public class Plugin : Plugin<Config>
@@ -37,7 +38,6 @@ public class Plugin : Plugin<Config>
         BasePath = Path.Combine(Paths.IndividualConfigs, this.Name.ToLower());
         SchematicPath = Path.Combine(BasePath, "Schematics");
         AudioPath = Path.Combine(BasePath, "Audio");
-        this.CreatePluginDirectory(BasePath);
         this.CreatePluginDirectory(SchematicPath);
         this.CreatePluginDirectory(AudioPath);
 

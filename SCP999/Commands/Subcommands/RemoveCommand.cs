@@ -24,7 +24,7 @@ public class RemoveCommand : ICommand
             return false;
         }
         
-        var scp999Role = CustomRole.Get(typeof(Scp999Role));
+        var scp999Role = CustomRole.Get(9999);
         if (scp999Role == null)
         {
             response = "Custom role SCP-999 not found or not registered";

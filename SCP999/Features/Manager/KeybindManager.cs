@@ -3,8 +3,8 @@ using System.Linq;
 using Exiled.API.Features;
 using Exiled.API.Features.Core.UserSettings;
 
-namespace Scp999;
-public class KeybindFeature
+namespace Scp999.Features.Manager;
+public class KeybindManager
 {
     private static IEnumerable<SettingBase> _settings;
     

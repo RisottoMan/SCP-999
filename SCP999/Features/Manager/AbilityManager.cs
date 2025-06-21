@@ -4,7 +4,7 @@ using System.Reflection;
 using Exiled.API.Features;
 using Scp999.Interfaces;
 
-namespace Scp999;
+namespace Scp999.Features.Manager;
 public static class AbilityManager
 {
     private static List<IAbility> _abilityList = new();
