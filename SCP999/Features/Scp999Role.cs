@@ -7,7 +7,6 @@ using CustomPlayerEffects;
 using Exiled.API.Features.Spawn;
 using Exiled.API.Enums;
 using MEC;
-using Scp999.Features;
 using UnityEngine;
 
 namespace Scp999.Features;
@@ -38,7 +37,6 @@ public class Scp999Role : CustomRole
     public override bool KeepRoleOnChangingRole { get; set; } = false;
     public override RoleTypeId Role { get; set; } = RoleTypeId.Tutorial;
     
-    [Description("Broadcast after SCP-999 spawn")]
     public override Exiled.API.Features.Broadcast Broadcast { get; set; } = new()
     {
         Show = true,
@@ -51,7 +49,6 @@ public class Scp999Role : CustomRole
 
     protected override void ShowMessage(Player player) {}
     
-    [Description("Broadcast after SCP-999 spawn")]
     public override string ConsoleMessage { get; set; } =
         "You are SCP-999 - The tickle monster!\n" +    
         "You have a lot of abilities, for example, you can heal players or dance.\n" +
@@ -65,8 +62,9 @@ public class Scp999Role : CustomRole
     {
         // Setup of a custom role
         base.AddRole(player);
-        
+        player.CustomName = this.Name;
         player.EnableEffect<Disabled>();
+        player.Mute();
         
         Timing.CallDelayed(0.1f, () =>
         {
@@ -85,6 +83,8 @@ public class Scp999Role : CustomRole
     {
         // Remove a custom role
         base.RemoveRole(player);
+        player.CustomName = null;
+        player.UnMute();
         
         // Unregister PlayerComponent for player
         Object.Destroy(player.GameObject.GetComponent<PlayerAssembler>());

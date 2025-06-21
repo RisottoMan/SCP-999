@@ -12,50 +12,50 @@ public class HintManager
 {
     public static void AddHint(Player player)
     {
-        // Checking that the HintServiceMeow plugin is loaded on the server
-        if (!AppDomain.CurrentDomain.GetAssemblies().Any(x => x.FullName.ToLower().Contains("hintservicemeow")))
+        try
         {
-            Log.Error("HintServiceMeow is not installed. There is no way to give the player a hint.");
-            return;
-        }
+            var abilityList = AbilityManager.GetAbilities.OrderBy(r => r.KeyId);
         
-        var abilityList = AbilityManager.GetAbilities.OrderBy(r => r.KeyId);
-        
-        Hint hint = new Hint
-        {
-            Id = "999",
-            AutoText = arg =>
+            Hint hint = new Hint
             {
-                var assembler = player.GameObject.GetComponent<PlayerAssembler>();
-                StringBuilder stringBuilder = new StringBuilder();
-                
-                stringBuilder.Append("<size=50><color=#ffa500>\ud83d\ude06 <b>SCP-999</b></color></size>\n");
-                stringBuilder.Append("Abilities:\n");
-                
-                foreach (IAbility ability in abilityList)
+                Id = "999",
+                AutoText = arg =>
                 {
-                    string color = "#ffa500";
-                    if (!assembler.IsAbilityAvailable(ability.Name))
+                    var assembler = player.GameObject.GetComponent<PlayerAssembler>();
+                    StringBuilder stringBuilder = new StringBuilder();
+                
+                    stringBuilder.Append("<size=50><color=#ffa500>\ud83d\ude06 <b>SCP-999</b></color></size>\n");
+                    stringBuilder.Append("Abilities:\n");
+                
+                    foreach (IAbility ability in abilityList)
                     {
-                        color = "#966100";
-                    }
+                        string color = "#ffa500";
+                        if (!assembler.IsAbilityAvailable(ability.Name))
+                        {
+                            color = "#966100";
+                        }
                     
-                    stringBuilder.Append($"<color={color}>{ability.Name}  [{ability.KeyCode}]</color>\n");
-                }
+                        stringBuilder.Append($"<color={color}>{ability.Name}  [{ability.KeyCode}]</color>\n");
+                    }
                 
-                stringBuilder.Append($"\n<size=18>if you cant use abilities\n" +
-                                     $"remove \u2b50 in settings</size>");
+                    stringBuilder.Append($"\n<size=18>if you cant use abilities\n" +
+                                         $"remove \u2b50 in settings</size>");
                 
-                return stringBuilder.ToString();
-            },
-            FontSize = 35,
-            YCoordinate = 500,
-            Alignment = HintAlignment.Right,
-            SyncSpeed = HintSyncSpeed.Normal,
-        };
+                    return stringBuilder.ToString();
+                },
+                FontSize = 35,
+                YCoordinate = 500,
+                Alignment = HintAlignment.Right,
+                SyncSpeed = HintSyncSpeed.Normal,
+            };
 
-        PlayerDisplay playerDisplay = PlayerDisplay.Get(player);
-        playerDisplay.AddHint(hint);
+            PlayerDisplay playerDisplay = PlayerDisplay.Get(player);
+            playerDisplay.AddHint(hint);
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"An error occurred when adding hint to player: {ex}");
+        }
     }
 
     public static void RemoveHint(Player player)

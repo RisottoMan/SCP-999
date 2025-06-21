@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Exiled.API.Features;
 using HarmonyLib;
 
 namespace Scp999.Patches;
@@ -13,8 +14,8 @@ public class SchematicMerPatch
         {
             var declaringType = frame.GetMethod().DeclaringType;
             var assemblyName = declaringType.Assembly.GetName().Name;
-            
-            if (assemblyName == "Scp999" && declaringType.Name == "SchematicFeature")
+
+            if (assemblyName == "Scp999" && declaringType.Name == "SchematicManager")
             {
                 __result = Plugin.Singleton.SchematicPath;
                 return false;

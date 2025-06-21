@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Exiled.API.Features;
+using MEC;
 using ProjectMER.Features.Objects;
 using Scp999.Features.Manager;
 using UnityEngine;
@@ -21,6 +22,7 @@ public class PlayerAssembler : MonoBehaviour
         AudioManager.AddAudioPlayer(this._player, out this._audioPlayer);                     // Attach a AudioPlayer to the player
         SchematicManager.AddSchematic(this._player, out this._schematicObject);               // Attach a schematic to the player
         SchematicManager.GetAnimatorFromSchematic(this._schematicObject, out this._animator); // Get animator from schematic
+        SchematicManager.ChangeSize(this._player, this._schematicObject);
         Log.Debug($"[PlayerAssembler] Custom role granted for {this._player.Nickname}");
         
         this._abilityCooldown = AbilityManager.GetAbilities.ToDictionary(a => a.Name, _ => 0f);
@@ -54,7 +56,7 @@ public class PlayerAssembler : MonoBehaviour
         KeybindManager.UnregisterKeybindsForPlayer(this._player);               // Unregister keybinds
         HintManager.RemoveHint(this._player);                                   // Remove hint
         AudioManager.RemoveAudioPlayer(this._audioPlayer);                      // Remove a AudioPlayer
-        SchematicManager.RemoveSchematic(this._player, this._schematicObject);  // Remove schematic
+        SchematicManager.RemoveSchematic(this._schematicObject);                // Remove schematic
         
         Log.Debug($"[PlayerAssembler] Custom role removed for {this._player.Nickname}");
         

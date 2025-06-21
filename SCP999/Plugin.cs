@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using HarmonyLib;
 using Exiled.CustomRoles.API;
 using Exiled.API.Features;
@@ -30,6 +31,20 @@ public class Plugin : Plugin<Config>
         // Patch
         _harmony = new Harmony($"risottoman.scp999");
         _harmony.PatchAll();
+        
+        // Checking that the ProjectMER plugin is loaded on the server
+        if (!AppDomain.CurrentDomain.GetAssemblies().Any(x => x.FullName.ToLower().Contains("projectmer")))
+        {
+            Log.Error("ProjectMER is not installed. Schematics can't spawn the SCP-999 game model.");
+            return;
+        }
+        
+        // Checking that the HintServiceMeow plugin is loaded on the server
+        if (!AppDomain.CurrentDomain.GetAssemblies().Any(x => x.FullName.ToLower().Contains("hintservicemeow")))
+        {
+            Log.Error("HintServiceMeow is not installed. There is no way to give the player a hint.");
+            return;
+        }
         
         // Register the custom scp999 role
         Config.Scp999RoleConfig.Register();
