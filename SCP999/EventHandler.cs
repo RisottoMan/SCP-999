@@ -6,7 +6,9 @@ using Exiled.CustomRoles.API;
 using Exiled.CustomRoles.API.Features;
 using Exiled.Events.EventArgs.Player;
 using Exiled.Events.EventArgs.Scp096;
+using Exiled.Events.EventArgs.Scp330;
 using Exiled.Events.EventArgs.Warhead;
+using Exiled.Events.Patches.Events.Scp330;
 using MEC;
 using Scp999.Features;
 using Random = UnityEngine.Random;
@@ -22,7 +24,6 @@ public class EventHandler
         Exiled.Events.Handlers.Server.RoundStarted += this.OnRoundStarted;
         Exiled.Events.Handlers.Warhead.Starting += this.OnWarheadStart;
         Exiled.Events.Handlers.Warhead.Stopping += this.OnWarheadStop;
-        Exiled.Events.Handlers.Scp096.Enraging += this.OnScpEnraging;
         Exiled.Events.Handlers.Scp096.AddingTarget += this.OnAddingTarget;
         Exiled.Events.Handlers.Player.SpawningRagdoll += this.OnSpawningRagdoll;
         Exiled.Events.Handlers.Player.EnteringPocketDimension += this.OnEnteringPocketDimension;
@@ -32,6 +33,7 @@ public class EventHandler
         Exiled.Events.Handlers.Player.UsingItem += this.OnUsingItem;
         Exiled.Events.Handlers.Player.UsingItem += this.OnUsingItem;
         Exiled.Events.Handlers.Player.Dying += this.OnPlayerDying;
+        Exiled.Events.Handlers.Scp330.InteractingScp330 += this.OnInteractingScp330;
     }
     
     ~EventHandler()
@@ -39,7 +41,6 @@ public class EventHandler
         Exiled.Events.Handlers.Server.RoundStarted -= this.OnRoundStarted;
         Exiled.Events.Handlers.Warhead.Starting -= this.OnWarheadStart;
         Exiled.Events.Handlers.Warhead.Stopping -= this.OnWarheadStop;
-        Exiled.Events.Handlers.Scp096.Enraging -= this.OnScpEnraging;
         Exiled.Events.Handlers.Scp096.AddingTarget -= this.OnAddingTarget;
         Exiled.Events.Handlers.Player.SpawningRagdoll -= this.OnSpawningRagdoll;
         Exiled.Events.Handlers.Player.EnteringPocketDimension -= this.OnEnteringPocketDimension;
@@ -49,6 +50,7 @@ public class EventHandler
         Exiled.Events.Handlers.Player.UsingItem -= this.OnUsingItem;
         Exiled.Events.Handlers.Player.UsingItem -= this.OnUsingItem;
         Exiled.Events.Handlers.Player.Dying -= this.OnPlayerDying;
+        Exiled.Events.Handlers.Scp330.InteractingScp330 -= this.OnInteractingScp330;
     }
     
     /// <summary>
@@ -189,18 +191,7 @@ public class EventHandler
     /// </summary>
     private void OnWarheadStop(StoppingEventArgs ev)
     {
-        if (CustomRole.Get(9999)!.Check(ev.Player))
-        {
-            ev.IsAllowed = false;
-        }
-    }
-    
-    /// <summary>
-    /// Does not allow SCP-999 to enrage SCP-096
-    /// </summary>
-    private void OnScpEnraging(EnragingEventArgs ev)
-    {
-        if (CustomRole.Get(9999)!.Check(ev.Player))
+        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
         {
             ev.IsAllowed = false;
         }
@@ -211,7 +202,7 @@ public class EventHandler
     /// </summary>
     private void OnAddingTarget(AddingTargetEventArgs ev)
     {
-        if (CustomRole.Get(9999)!.Check(ev.Player))
+        if (CustomRole.Get(9999)!.Check(ev.Target))
         {
             ev.IsAllowed = false;
         }
@@ -232,6 +223,17 @@ public class EventHandler
     /// Does not allow SCP-106 to teleport SCP-999 to a pocket dimension
     /// </summary>
     private void OnEnteringPocketDimension(EnteringPocketDimensionEventArgs ev)
+    {
+        if (CustomRole.Get(9999)!.Check(ev.Player))
+        {
+            ev.IsAllowed = false;
+        }
+    }
+
+    /// <summary>
+    /// Does not allow SCP-999 to take candies
+    /// </summary>
+    private void OnInteractingScp330(InteractingScp330EventArgs ev)
     {
         if (CustomRole.Get(9999)!.Check(ev.Player))
         {
