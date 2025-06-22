@@ -34,7 +34,7 @@
 Use only ``HintServiceMeow-Exiled``, because ``HintServiceMeow-LabApi`` is causing problems.
 # Commands
 - Give permission ``.scp999`` to your role in ``EXILED/Configs/permissions.yml``
-- Use ``scp999 give [id]`` to give scp999 for specific player
+- Use ``scp999 give [id]`` to give scp999 to specific player
 - Use ``scp999 remove [id]`` to remove scp999, if the player has SCP-999 role
 
 # Credits
