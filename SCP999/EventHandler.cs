@@ -2,13 +2,11 @@
 using System.Linq;
 using Exiled.API.Enums;
 using Exiled.API.Features;
-using Exiled.CustomRoles.API;
 using Exiled.CustomRoles.API.Features;
 using Exiled.Events.EventArgs.Player;
 using Exiled.Events.EventArgs.Scp096;
 using Exiled.Events.EventArgs.Scp330;
 using Exiled.Events.EventArgs.Warhead;
-using Exiled.Events.Patches.Events.Scp330;
 using MEC;
 using Scp999.Features;
 using Random = UnityEngine.Random;
@@ -79,7 +77,7 @@ public class EventHandler
             // List of people who could potentially become SCP-999
             var players = Player.List.Where(r => r.IsHuman && !r.IsNPC && r.CustomInfo == null).ToList();
             // A minimum of players is required
-            if (players.Count < min)
+            if (players.Count < min && players.Count == 0)
                 return;
         
             // The formula for the chance of SCP-999 appearing in a round depends on count of players
@@ -129,12 +127,19 @@ public class EventHandler
             ev.IsAllowed = false;
         }
 
-        // Disable car damage
-        if (ev.DamageHandler.Type == DamageType.Crushed)
+        // Disable damage from car
+        if (ev.DamageHandler.Type == DamageType.Crushed && 
+            ev.Player.CurrentRoom.Type == RoomType.Surface)
         {
             ev.IsAllowed = false;
         }
-            
+        
+        // Disable damage from tesla
+        if (ev.DamageHandler.Type == DamageType.Tesla)
+        {
+            ev.IsAllowed = false;
+        }
+        
         // Increase damage from decontamination
         if (ev.DamageHandler.Type == DamageType.Decontamination)
         {

@@ -64,7 +64,9 @@ public class Scp999Role : CustomRole
         base.AddRole(player);
         player.CustomName = this.Name;
         player.EnableEffect<Disabled>();
-        player.Mute();
+        player.EnableEffect<SilentWalk>();
+        player.ChangeEffectIntensity<SilentWalk>(10);
+        player.IsMuted = true;
         
         Timing.CallDelayed(0.1f, () =>
         {
@@ -84,7 +86,7 @@ public class Scp999Role : CustomRole
         // Remove a custom role
         base.RemoveRole(player);
         player.CustomName = null;
-        player.UnMute();
+        player.IsMuted = false;
         
         // Unregister PlayerComponent for player
         Object.Destroy(player.GameObject.GetComponent<PlayerAssembler>());
