@@ -9,6 +9,7 @@ using Exiled.Events.EventArgs.Scp330;
 using Exiled.Events.EventArgs.Warhead;
 using MEC;
 using Scp999.Features;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Scp999;
@@ -32,6 +33,7 @@ public class EventHandler
         Exiled.Events.Handlers.Player.UsingItem += this.OnUsingItem;
         Exiled.Events.Handlers.Player.Dying += this.OnPlayerDying;
         Exiled.Events.Handlers.Scp330.InteractingScp330 += this.OnInteractingScp330;
+        Exiled.Events.Handlers.Player.Verified += this.OnVerified;
     }
     
     ~EventHandler()
@@ -49,6 +51,7 @@ public class EventHandler
         Exiled.Events.Handlers.Player.UsingItem -= this.OnUsingItem;
         Exiled.Events.Handlers.Player.Dying -= this.OnPlayerDying;
         Exiled.Events.Handlers.Scp330.InteractingScp330 -= this.OnInteractingScp330;
+        Exiled.Events.Handlers.Player.Verified -= this.OnVerified;
     }
     
     /// <summary>
@@ -243,6 +246,21 @@ public class EventHandler
         if (CustomRole.Get(9999)!.Check(ev.Player))
         {
             ev.IsAllowed = false;
+        }
+    }
+
+    /// <summary>
+    /// Update size from SCP-999 to new player
+    /// </summary>
+    /// <param name="ev"></param>
+    private void OnVerified(VerifiedEventArgs ev)
+    {
+        foreach (var player in Player.List)
+        {
+            if (CustomRole.Get(9999)!.Check(player))
+            {
+                Server.SendSpawnMessage?.Invoke(null, [player.ReferenceHub.networkIdentity, ev.Player.Connection]);
+            }
         }
     }
 }
