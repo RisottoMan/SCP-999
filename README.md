@@ -1,7 +1,7 @@
 <h1 align="center"> SCP-999 - "The Tickle Monster"</h1>
 <h2 align="center"> 😍 Adds a cute gelatin monster to the game 🥰</h2>
 <p align="center">
-  <img src="https://github.com/RisottoMan/SCP999/blob/main/Photos/Main1.png" alt="SCP-999 - `The Tickle Monster`">
+  <img src="https://github.com/RisottoMan/SCP-999/blob/main/Photos/Main1.png" alt="SCP-999 - `The Tickle Monster`">
 </p>
 
 
