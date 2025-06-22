@@ -2,7 +2,7 @@
 using Scp999.Interfaces;
 using UnityEngine;
 
-namespace Scp999.Abilities;
+namespace Scp999.Features.Abilities;
 public class YippeeAbility : Ability
 {
     public override string Name => "Yippee";

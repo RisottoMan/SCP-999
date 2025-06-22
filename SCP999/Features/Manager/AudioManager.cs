@@ -4,12 +4,19 @@ using Exiled.API.Features;
 using UnityEngine;
 
 namespace Scp999.Features.Manager;
-public class AudioManager
+public static class AudioManager
 {
     private static List<string> _audioNameList = new()
     {
         "yippee-tbh1",
-        "yippee-tbh2"
+        "yippee-tbh2",
+        "hello",
+        "hi",
+        "jump",
+        "health",
+        "circus",
+        "funnytoy",
+        "uwu"
     };
     
     public static void AddAudioPlayer(Player player, out AudioPlayer audioPlayer)

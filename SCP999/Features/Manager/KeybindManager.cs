@@ -4,7 +4,7 @@ using Exiled.API.Features;
 using Exiled.API.Features.Core.UserSettings;
 
 namespace Scp999.Features.Manager;
-public class KeybindManager
+public static class KeybindManager
 {
     private static IEnumerable<SettingBase> _settings;
     

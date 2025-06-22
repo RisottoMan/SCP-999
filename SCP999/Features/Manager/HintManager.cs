@@ -8,7 +8,7 @@ using Scp999.Interfaces;
 using Hint = HintServiceMeow.Core.Models.Hints.Hint;
 
 namespace Scp999.Features.Manager;
-public class HintManager
+public static class HintManager
 {
     public static void AddHint(Player player)
     {

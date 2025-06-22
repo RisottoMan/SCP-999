@@ -6,7 +6,7 @@ using ProjectMER.Features.Objects;
 using UnityEngine;
 
 namespace Scp999.Features.Manager;
-public class SchematicManager
+public static class SchematicManager
 {
     public static void AddSchematic(Player player, out SchematicObject schematicObject)
     {
@@ -27,7 +27,7 @@ public class SchematicManager
 
     public static void ChangeSize(Player player, SchematicObject schematicObject)
     {
-        Timing.CallDelayed(0.1f, () =>
+        Timing.CallDelayed(1f, () =>
         {
             player.Scale = new Vector3(0.00001f, 1, 0.00001f);
             schematicObject.transform.localScale = new Vector3(100000f, 1, 100000f);

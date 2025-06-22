@@ -4,7 +4,7 @@ using MEC;
 using Scp999.Interfaces;
 using UnityEngine;
 
-namespace Scp999.Abilities;
+namespace Scp999.Features.Abilities;
 public class HealAbility : Ability
 {
     public override string Name => "Heal";
@@ -17,16 +17,22 @@ public class HealAbility : Ability
         animator?.Play("HealthAnimation");
         audioPlayer.AddClip($"health");
         
-        Timing.RunCoroutine(this.CheckEndOfAnimation(player));
+        Timing.RunCoroutine(this.CheckEndOfAnimation(player, animator));
     }
 
-    private IEnumerator<float> CheckEndOfAnimation(Player player)
+    private IEnumerator<float> CheckEndOfAnimation(Player player, Animator animator)
     {
+        //yield return Timing.WaitForSeconds(1f);
         float distance = Plugin.Singleton.Config.MaxDistance;
-        int counter = _healPlayerTimes;
         
-        while (counter > 0)
+        while (true)
         {
+            // If the animation has returned to the Idle state, then break the cycle
+            var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            if (!stateInfo.IsName("HealthAnimation"))
+                yield break;
+            
+            // Heal all the players in the radius
             foreach (Player ply in Player.List)
             {
                 if (player == ply)
@@ -35,23 +41,22 @@ public class HealAbility : Ability
                 if (Vector3.Distance(player.Position, ply.Position) < distance)
                 {
                     float value;
-                    if (player.MaxHealth > 2000)
+                    if (player.MaxHealth >= 2000)
                     {
-                        value = player.MaxHealth / 20; //SCP
+                        value = 200; //SCP
                     }
                     else
                     {
-                        value = player.MaxHealth / 5; //Human
+                        value = 20; //Human
                     }
                     
                     ply.Heal(value);
                 }
             }
-
-            counter--;
+            
+            // We are waiting for 2 seconds, as less is worse
+            Log.Debug("[HealAbility] Heal all players");
             yield return Timing.WaitForSeconds(1f);
         }
     }
-    
-    private int _healPlayerTimes = 5;
 }
