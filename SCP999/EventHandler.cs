@@ -77,7 +77,7 @@ public class EventHandler
             // List of people who could potentially become SCP-999
             var players = Player.List.Where(r => r.IsHuman && !r.IsNPC && r.CustomInfo == null).ToList();
             // A minimum of players is required
-            if (players.Count < min && players.Count == 0)
+            if (players.Count < min || players.Count == 0)
                 return;
         
             // The formula for the chance of SCP-999 appearing in a round depends on count of players
