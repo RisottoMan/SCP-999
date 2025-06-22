@@ -15,19 +15,19 @@
 ## 😇 **Hello** - Greet the players or ask for attention.
 
 <p align="center">
-  <img src="https://github.com/RisottoMan/SCP-999/blob/main/Photos/Healing.gif" alt="SCP-999 - `Abilities`">
+  <img src="https://github.com/RisottoMan/SCP-999/blob/main/Photos/Hello.gif" alt="SCP-999 - `Abilities`">
 </p>
 
 ## 😇 **Heal** - Restores health to all players in the radius.
 
 <p align="center">
-  <img src="https://github.com/RisottoMan/SCP-999/blob/main/Photos/Healing.gif" alt="SCP-999 - `Abilities`">
+  <img src="https://github.com/RisottoMan/SCP-999/blob/main/Photos/Health.gif" alt="SCP-999 - `Abilities`">
 </p>
 
 ## 🫠 **Animations** - Play a random funny animations.
 
 <p align="center">
-  <img src="https://github.com/RisottoMan/SCP-999/blob/main/Photos/Anim.gif" alt="SCP-999 - `Abilities`">
+  <img src="https://github.com/RisottoMan/SCP-999/blob/main/Photos/Jump.gif" alt="SCP-999 - `Abilities`">
 </p>
 
 # Installation
