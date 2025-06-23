@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Exiled.API.Enums;
+using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.CustomRoles.API.Features;
 using Exiled.Events.EventArgs.Player;
@@ -9,7 +10,6 @@ using Exiled.Events.EventArgs.Scp330;
 using Exiled.Events.EventArgs.Warhead;
 using MEC;
 using Scp999.Features;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Scp999;
@@ -255,12 +255,18 @@ public class EventHandler
     /// <param name="ev"></param>
     private void OnVerified(VerifiedEventArgs ev)
     {
-        foreach (var player in Player.List)
+        if (ev.Player is null)
+            return;
+        
+        Timing.CallDelayed(0.1f, () =>
         {
-            if (CustomRole.Get(9999)!.Check(player))
+            foreach (var player in Player.List)
             {
-                Server.SendSpawnMessage?.Invoke(null, [player.ReferenceHub.networkIdentity, ev.Player.Connection]);
+                if (CustomRole.Get(9999)!.Check(player))
+                {
+                    Server.SendSpawnMessage?.Invoke(null, [player.ReferenceHub.networkIdentity, ev.Player.Connection]);
+                }
             }
-        }
+        });
     }
 }

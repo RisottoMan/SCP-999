@@ -27,10 +27,14 @@ public static class SchematicManager
 
     public static void ChangeSize(Player player, SchematicObject schematicObject)
     {
-        Timing.CallDelayed(1f, () =>
+        Timing.CallDelayed(0.1f, () =>
         {
             player.Scale = new Vector3(0.00001f, 1, 0.00001f);
-            schematicObject.transform.localScale = new Vector3(100000f, 1, 100000f);
+
+            Timing.CallDelayed(0.1f, () =>
+            {
+                schematicObject.transform.localScale = new Vector3(100000f, 1, 100000f);
+            });
         });
     }
     
