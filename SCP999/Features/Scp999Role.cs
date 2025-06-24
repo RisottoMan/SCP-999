@@ -2,11 +2,11 @@
 using Exiled.CustomRoles.API.Features;
 using PlayerRoles;
 using System.Collections.Generic;
-using System.ComponentModel;
 using CustomPlayerEffects;
 using Exiled.API.Features.Spawn;
 using Exiled.API.Enums;
 using MEC;
+using Scp999.Features.Controller;
 using UnityEngine;
 
 namespace Scp999.Features;
@@ -74,7 +74,7 @@ public class Scp999Role : CustomRole
         });
         
         // Register PlayerComponent for player
-        player.GameObject.AddComponent<PlayerAssembler>();
+        player.GameObject.AddComponent<PlayerController>();
     }
 
     /// <summary>
@@ -89,6 +89,6 @@ public class Scp999Role : CustomRole
         player.IsMuted = false;
         
         // Unregister PlayerComponent for player
-        Object.Destroy(player.GameObject.GetComponent<PlayerAssembler>());
+        Object.Destroy(player.GameObject.GetComponent<PlayerController>());
     }
 }

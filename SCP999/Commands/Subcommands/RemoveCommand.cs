@@ -2,6 +2,7 @@
 using CommandSystem;
 using Exiled.API.Features;
 using Exiled.CustomRoles.API.Features;
+using Scp999.Features;
 
 namespace Scp999.Commands;
 public class RemoveCommand : ICommand
@@ -24,7 +25,7 @@ public class RemoveCommand : ICommand
             return false;
         }
         
-        var scp999Role = CustomRole.Get(9999);
+        var scp999Role = CustomRole.Get(typeof(Scp999Role));
         if (scp999Role == null)
         {
             response = "Custom role SCP-999 not found or not registered";

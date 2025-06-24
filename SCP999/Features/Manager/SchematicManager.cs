@@ -1,6 +1,5 @@
 ﻿using System;
 using Exiled.API.Features;
-using MEC;
 using ProjectMER.Features;
 using ProjectMER.Features.Objects;
 using UnityEngine;
@@ -8,47 +7,27 @@ using UnityEngine;
 namespace Scp999.Features.Manager;
 public static class SchematicManager
 {
-    public static void AddSchematic(Player player, out SchematicObject schematicObject)
+    public static SchematicObject AddSchematicByName(string schematicName)
     {
         try
         {
-            schematicObject = ObjectSpawner.SpawnSchematic("SCP999", Vector3.zero, player.Rotation, Vector3.one);
+            return ObjectSpawner.SpawnSchematic(schematicName, Vector3.zero, Vector3.zero, Vector3.one);
         }
         catch (Exception ex)
         {
             Log.Error($"An error occurred when loading schematics: {ex}");
-            schematicObject = null;
-            return;
+            return null;
         }
-
-        schematicObject.transform.parent = player.Transform;
-        schematicObject.transform.position = player.Position + new Vector3(0, -0.75f, 0);
     }
 
-    public static void ChangeSize(Player player, SchematicObject schematicObject)
+    public static Animator GetAnimatorFromSchematic(SchematicObject schematicObject)
     {
-        Timing.CallDelayed(0.1f, () =>
-        {
-            player.Scale = new Vector3(0.00001f, 1, 0.00001f);
-
-            Timing.CallDelayed(0.1f, () =>
-            {
-                schematicObject.transform.localScale = new Vector3(100000f, 1, 100000f);
-            });
-        });
-    }
-    
-    public static void RemoveSchematic(SchematicObject schematicObject)
-    {
-        schematicObject?.Destroy();
-    }
-
-    public static void GetAnimatorFromSchematic(SchematicObject schematicObject, out Animator animator)
-    {
-        animator = schematicObject?.GetComponentInChildren<Animator>(true);
+        Animator animator = schematicObject?.GetComponentInChildren<Animator>(true);
         if (animator == null)
         {
             Log.Error("The animator was not found");
         }
+
+        return animator;
     }
 }

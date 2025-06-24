@@ -4,6 +4,7 @@ using System.Text;
 using Exiled.API.Features;
 using HintServiceMeow.Core.Enum;
 using HintServiceMeow.Core.Utilities;
+using Scp999.Features.Controller;
 using Scp999.Interfaces;
 using Hint = HintServiceMeow.Core.Models.Hints.Hint;
 
@@ -21,7 +22,7 @@ public static class HintManager
                 Id = "999",
                 AutoText = arg =>
                 {
-                    var assembler = player.GameObject.GetComponent<PlayerAssembler>();
+                    var controller = player.GameObject.GetComponent<CooldownController>();
                     StringBuilder stringBuilder = new StringBuilder();
                 
                     stringBuilder.Append("<size=50><color=#ffa500>\ud83d\ude06 <b>SCP-999</b></color></size>\n");
@@ -30,7 +31,7 @@ public static class HintManager
                     foreach (IAbility ability in abilityList)
                     {
                         string color = "#ffa500";
-                        if (!assembler.IsAbilityAvailable(ability.Name))
+                        if (!controller.IsAbilityAvailable(ability.Name))
                         {
                             color = "#966100";
                         }

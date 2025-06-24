@@ -19,37 +19,20 @@ public static class AudioManager
         "uwu"
     };
     
-    public static void AddAudioPlayer(Player player, out AudioPlayer audioPlayer)
+    public static AudioPlayer AddAudioPlayer(Player player, int volume)
     {
-        if (player is null)
-        {
-            Log.Error($"[AddAudioPlayer] The audioPlayer is null");
-            audioPlayer = null;
-            return;
-        }
-        
-        audioPlayer = AudioPlayer.CreateOrGet($"Scp999 {player.Nickname}", onIntialCreation: (p) =>
+        AudioPlayer audioPlayer = AudioPlayer.CreateOrGet($"Scp999 {player.Nickname}", onIntialCreation: (p) =>
         {        
             // Attach created audio player to player.
             p.transform.parent = player.GameObject.transform;
 
             // This created speaker will be in 3D space.
-            Speaker speaker = p.AddSpeaker("Scp999-Main", isSpatial: true, minDistance: 5f, maxDistance: 15f);
-
-            // Attach created speaker to player.
-            speaker.transform.parent = player.GameObject.transform;
-
-            // Set local position to zero to make sure that speaker is in player.
-            speaker.transform.localPosition = Vector3.zero;
+            Speaker speaker = p.AddSpeaker("scp999-speaker", volume, true, 5f, 15f);
         });
 
         LoadAudioFiles();
-    }
-
-    public static void RemoveAudioPlayer(AudioPlayer audioPlayer)
-    {
-        audioPlayer.RemoveAllClips();
-        audioPlayer.Destroy();
+        
+        return audioPlayer;
     }
 
     private static void LoadAudioFiles()
