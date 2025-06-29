@@ -16,6 +16,7 @@ namespace Scp999;
 public class EventHandler
 {
     private readonly Plugin _plugin;
+    private Scp999Role _scp999role;
     public EventHandler(Plugin plugin)
     {
         _plugin = plugin;
@@ -61,7 +62,12 @@ public class EventHandler
     /// </summary>
     private void OnRoundStarted()
     {
-        Scp999Role customRole = CustomRole.Get(typeof(Scp999Role)) as Scp999Role;
+        _scp999role = CustomRole.Get(typeof(Scp999Role)) as Scp999Role;
+        if (_scp999role is null)
+        {
+            Log.Error("Custom role SCP-999 role not found or not registered");
+            return;
+        }
 
         // Minimum and maximum number of Players for the chance of SCP-999 appearing
         float min = _plugin.Config.MinimumPlayers - 1;
@@ -74,10 +80,10 @@ public class EventHandler
         }
         
         // Add SCP-999 if no in the game
-        if (customRole!.TrackedPlayers.Count >= customRole.SpawnProperties.Limit)
+        if (_scp999role!.TrackedPlayers.Count >= _scp999role.SpawnProperties.Limit)
             return;
         
-        for (int i = 0; i < customRole.SpawnProperties.Limit; i++)
+        for (int i = 0; i < _scp999role.SpawnProperties.Limit; i++)
         {
             // List of people who could potentially become SCP-999
             var players = Player.List.Where(r => r.IsHuman && !r.IsNPC && r.CustomInfo == null).ToList();
@@ -102,7 +108,7 @@ public class EventHandler
 
             Timing.CallDelayed(0.05f, () =>
             {
-                customRole!.AddRole(randomPlayer);
+                _scp999role!.AddRole(randomPlayer);
             });
         }
     }
@@ -112,7 +118,7 @@ public class EventHandler
     /// </summary>
     private void OnUsingItem(UsingItemEventArgs ev)
     {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
+        if (_scp999role != null && _scp999role.Check(ev.Player))
         {
             ev.IsAllowed = false;
         }
@@ -123,32 +129,32 @@ public class EventHandler
     /// </summary>
     private void OnPlayerHurting(HurtingEventArgs ev)
     {
-        if (!CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
-            return;
-        
-        // Disable damage from players
-        if (!_plugin.Config.IsPlayerCanHurt && ev.Attacker is not null)
+        if (_scp999role != null && _scp999role.Check(ev.Player))
         {
-            ev.IsAllowed = false;
-        }
+            // Disable damage from players
+            if (!_plugin.Config.IsPlayerCanHurt && ev.Attacker is not null)
+            {
+                ev.IsAllowed = false;
+            }
 
-        // Disable damage from car
-        if (ev.DamageHandler.Type == DamageType.Crushed && 
-            ev.Player.CurrentRoom.Type == RoomType.Surface)
-        {
-            ev.IsAllowed = false;
-        }
+            // Disable damage from car
+            if (ev.DamageHandler.Type == DamageType.Crushed && 
+                ev.Player.CurrentRoom.Type == RoomType.Surface)
+            {
+                ev.IsAllowed = false;
+            }
         
-        // Disable damage from tesla
-        if (ev.DamageHandler.Type == DamageType.Tesla)
-        {
-            ev.IsAllowed = false;
-        }
+            // Disable damage from tesla
+            if (ev.DamageHandler.Type == DamageType.Tesla)
+            {
+                ev.IsAllowed = false;
+            }
         
-        // Increase damage from decontamination
-        if (ev.DamageHandler.Type == DamageType.Decontamination)
-        {
-            ev.Amount = 300;
+            // Increase damage from decontamination
+            if (ev.DamageHandler.Type == DamageType.Decontamination)
+            {
+                ev.Amount = 300;
+            }
         }
     }
     
@@ -157,7 +163,7 @@ public class EventHandler
     /// </summary>
     private void OnSearchingPickup(SearchingPickupEventArgs ev)
     {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
+        if (_scp999role != null && _scp999role.Check(ev.Player))
         {
             ev.IsAllowed = false;
         }
@@ -168,7 +174,7 @@ public class EventHandler
     /// </summary>
     private void OnDroppingItem(DroppingItemEventArgs ev)
     {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
+        if (_scp999role != null && _scp999role.Check(ev.Player))
         {
             ev.IsAllowed = false;
         }
@@ -190,7 +196,7 @@ public class EventHandler
     /// </summary>
     private void OnWarheadStart(StartingEventArgs ev)
     {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
+        if (_scp999role != null && _scp999role.Check(ev.Player))
         {
             ev.IsAllowed = false;
         }
@@ -201,7 +207,7 @@ public class EventHandler
     /// </summary>
     private void OnWarheadStop(StoppingEventArgs ev)
     {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
+        if (_scp999role != null && _scp999role.Check(ev.Player))
         {
             ev.IsAllowed = false;
         }
@@ -212,7 +218,7 @@ public class EventHandler
     /// </summary>
     private void OnAddingTarget(AddingTargetEventArgs ev)
     {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Target))
+        if (_scp999role != null && _scp999role.Check(ev.Player))
         {
             ev.IsAllowed = false;
         }
@@ -223,7 +229,7 @@ public class EventHandler
     /// </summary>
     private void OnSpawningRagdoll(SpawningRagdollEventArgs ev)
     {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
+        if (_scp999role != null && _scp999role.Check(ev.Player))
         {
             ev.IsAllowed = false;
         }
@@ -234,7 +240,7 @@ public class EventHandler
     /// </summary>
     private void OnEnteringPocketDimension(EnteringPocketDimensionEventArgs ev)
     {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
+        if (_scp999role != null && _scp999role.Check(ev.Player))
         {
             ev.IsAllowed = false;
         }
@@ -245,7 +251,7 @@ public class EventHandler
     /// </summary>
     private void OnInteractingScp330(InteractingScp330EventArgs ev)
     {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
+        if (_scp999role != null && _scp999role.Check(ev.Player))
         {
             ev.IsAllowed = false;
         }
@@ -258,6 +264,9 @@ public class EventHandler
     private void OnVerified(VerifiedEventArgs ev)
     {
         if (ev.Player is null)
+            return;
+        
+        if (_scp999role is null)
             return;
         
         var scp999Role = CustomRole.Get(typeof(Scp999Role));
@@ -273,14 +282,15 @@ public class EventHandler
     /// </summary>
     private void OnChangingSpectatedPlayer(ChangingSpectatedPlayerEventArgs ev)
     {
-        var scp999Role = CustomRole.Get(typeof(Scp999Role));
+        if (_scp999role is null)
+            return;
         
-        if (scp999Role!.Check(ev.NewTarget))
+        if (_scp999role!.Check(ev.NewTarget))
         {
             InvisibleManager.RemoveInvisibleForPlayer(ev.NewTarget, ev.Player);
         }
         
-        if (scp999Role!.Check(ev.OldTarget))
+        if (_scp999role!.Check(ev.OldTarget))
         {
             InvisibleManager.MakeInvisibleForPlayer(ev.OldTarget, ev.Player);
         }

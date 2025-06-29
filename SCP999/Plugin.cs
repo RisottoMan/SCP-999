@@ -11,7 +11,7 @@ public class Plugin : Plugin<Config>
 {
     public override string Name => "Scp999";
     public override string Author => "RisottoMan";
-    public override Version Version => new(1, 0, 0);
+    public override Version Version => new(1, 0, 2);
     public override Version RequiredExiledVersion => new(9, 6, 0);
     
     private Harmony _harmony;
