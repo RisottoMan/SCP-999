@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
             _hintController.Init(_player);
         });
 
-        Timing.CallDelayed(0.5f, () =>
+        Timing.CallDelayed(1f, () =>
         {
             InvisibleManager.MakeInvisible(_player); // Make player invisible for other players
         });

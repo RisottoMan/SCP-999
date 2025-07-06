@@ -17,7 +17,20 @@ public class HealAbility : Ability
         animator?.Play("HealthAnimation");
         audioPlayer.AddClip($"health");
         
-        Timing.RunCoroutine(this.CheckEndOfAnimation(player, animator));
+        // Heal all the players in the radius
+        foreach (Player ply in Player.List)
+        {
+            if (player == ply)
+                continue;
+            
+            if (Vector3.Distance(player.Position, ply.Position) < Plugin.Singleton.Config.MaxDistance)
+            {
+                float value = ply.MaxHealth >= 2000 ? 500 : 100;
+                ply.Heal(value);
+            }
+        }
+        
+        //Timing.RunCoroutine(this.CheckEndOfAnimation(player, animator));
     }
 
     private IEnumerator<float> CheckEndOfAnimation(Player player, Animator animator)
@@ -41,7 +54,7 @@ public class HealAbility : Ability
                 if (Vector3.Distance(player.Position, ply.Position) < distance)
                 {
                     float value;
-                    if (player.MaxHealth >= 2000)
+                    if (ply.MaxHealth >= 2000)
                     {
                         value = 200; //SCP
                     }

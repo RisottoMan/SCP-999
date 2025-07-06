@@ -55,10 +55,12 @@ public class AnimationAbility : Ability
     private IEnumerator<float> CheckEndOfAnimation(Player player, Animator animator)
     {
         yield return Timing.WaitForSeconds(0.1f);
+        string initialClipName = animator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
+        
         while (true)
         {
-            var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-            if (stateInfo.IsName("IdleAnimation"))
+            var clipInfo = animator.GetCurrentAnimatorClipInfo(0);
+            if (clipInfo[0].clip.name != initialClipName)
             {
                 player.DisableEffect<Ensnared>();
                 yield break;
