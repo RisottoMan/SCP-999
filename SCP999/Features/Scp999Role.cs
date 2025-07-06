@@ -60,14 +60,26 @@ public class Scp999Role : CustomRole
     /// <param name="player">The player who should become SCP-999</param>
     public override void AddRole(Player player)
     {
-        // Setup of a custom role
-        base.AddRole(player);
+        player.Role.Set(this.Role, SpawnReason.ForceClass, RoleSpawnFlags.None);
+        player.Position = this.GetSpawnPosition();
+        player.ClearItems();
+        player.ClearAmmo();
+        player.UniqueRole = this.Name;
+        this.TrackedPlayers.Add(player);
+        player.Health = this.MaxHealth;
+        player.MaxHealth = this.MaxHealth;
+        player.Scale = this.Scale;
         player.CustomName = this.Name;
+        player.CustomInfo = player.CustomName + "\n" + this.CustomInfo;
+      
+        this.ShowMessage(player);
+        this.ShowBroadcast(player);
+        this.RoleAdded(player);
+        player.SendConsoleMessage(this.ConsoleMessage, "green");
+      
         player.EnableEffect<Disabled>();
-        player.EnableEffect<SilentWalk>();
-        player.ChangeEffectIntensity<SilentWalk>(10);
-        player.IsMuted = true;
-        
+        player.EnableEffect<Slowness>(intensity: 25);
+      
         Timing.CallDelayed(0.1f, () =>
         {
             player.EnableEffect<Ghostly>();
@@ -86,7 +98,6 @@ public class Scp999Role : CustomRole
         // Remove a custom role
         base.RemoveRole(player);
         player.CustomName = null;
-        player.IsMuted = false;
         
         // Unregister PlayerComponent for player
         Object.Destroy(player.GameObject.GetComponent<PlayerController>());

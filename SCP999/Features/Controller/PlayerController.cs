@@ -1,7 +1,10 @@
 ﻿using Exiled.API.Features;
+using LabApi.Features.Wrappers;
+using MEC;
 using ProjectMER.Features.Objects;
 using Scp999.Features.Manager;
 using UnityEngine;
+using Player = Exiled.API.Features.Player;
 
 namespace Scp999.Features.Controller;
 public class PlayerController : MonoBehaviour
@@ -14,18 +17,28 @@ public class PlayerController : MonoBehaviour
         _player = Player.Get(gameObject);
         Config config = Plugin.Singleton.Config;
         
-        KeybindManager.RegisterKeybindsForPlayer(this._player); // Register keybinds to player
-        HintManager.AddHint(this._player);                      // Attach hintservice to player
-        InvisibleManager.MakeInvisible(this._player);           // Make player invisible for other players
-        
         _schematicObject = SchematicManager.AddSchematicByName(config.SchematicName); // Create schematic
-        _animator = SchematicManager.GetAnimatorFromSchematic(this._schematicObject); // Get animator from schematic
-        _audioPlayer = AudioManager.AddAudioPlayer(this._player, config.Volume);      // Create audioPlayer
+        _animator = SchematicManager.GetAnimatorFromSchematic(_schematicObject); // Get animator from schematic
+        _audioPlayer = AudioManager.AddAudioPlayer(_player, config.Volume);      // Create audioPlayer
         _audioPlayer.TryGetSpeaker("scp999-speaker", out Speaker speaker);       // Get speaker
+        _textToy = TextToyManager.CreateTextForSchematic(_player, _schematicObject); // Create TextToy
 
         _movementController = gameObject.AddComponent<MovementController>();
         _movementController.Init(_schematicObject, speaker, config.SchematicOffset);
         _cooldownController = gameObject.AddComponent<CooldownController>();
+        
+        KeybindManager.RegisterKeybindsForPlayer(_player); // Register keybinds to player
+        
+        Timing.CallDelayed(0.1f, () =>
+        {
+            _hintController = gameObject.AddComponent<HintController>();
+            _hintController.Init(_player);
+        });
+
+        Timing.CallDelayed(0.5f, () =>
+        {
+            InvisibleManager.MakeInvisible(_player); // Make player invisible for other players
+        });
         
         Log.Debug($"[PlayerController] Custom role granted for {this._player.Nickname}");
     }
@@ -35,12 +48,12 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     void OnDestroy()
     {
+        Destroy(_hintController);     // Destroy hints
         Destroy(_movementController); // Destroy movement controller for schematic and audio
         Destroy(_cooldownController); // Destroy cooldown for abilities
 
         InvisibleManager.RemoveInvisible(this._player);           // Remove invisible
         KeybindManager.UnregisterKeybindsForPlayer(this._player); // Unregister keybinds
-        HintManager.RemoveHint(this._player);                     // Remove hint
         _audioPlayer.RemoveAllClips();                            // Remove all audio clips
         _audioPlayer.Destroy();                                   // Remove a AudioPlayer
         this._schematicObject.Destroy();                          // Remove schematic
@@ -57,6 +70,8 @@ public class PlayerController : MonoBehaviour
     private SchematicObject _schematicObject;
     private Animator _animator;
     private AudioPlayer _audioPlayer;
+    private TextToy _textToy;
     private MovementController _movementController;
     private CooldownController _cooldownController;
+    private HintController _hintController;
 }

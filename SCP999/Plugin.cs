@@ -11,7 +11,7 @@ public class Plugin : Plugin<Config>
 {
     public override string Name => "Scp999";
     public override string Author => "RisottoMan";
-    public override Version Version => new(1, 0, 2);
+    public override Version Version => new(1, 1, 0);
     public override Version RequiredExiledVersion => new(9, 6, 0);
     
     private Harmony _harmony;
@@ -36,13 +36,6 @@ public class Plugin : Plugin<Config>
         if (!AppDomain.CurrentDomain.GetAssemblies().Any(x => x.FullName.ToLower().Contains("projectmer")))
         {
             Log.Error("ProjectMER is not installed. Schematics can't spawn the SCP-999 game model.");
-            return;
-        }
-        
-        // Checking that the HintServiceMeow plugin is loaded on the server
-        if (!AppDomain.CurrentDomain.GetAssemblies().Any(x => x.FullName.ToLower().Contains("hintservicemeow")))
-        {
-            Log.Error("HintServiceMeow is not installed. There is no way to give the player a hint.");
             return;
         }
         
