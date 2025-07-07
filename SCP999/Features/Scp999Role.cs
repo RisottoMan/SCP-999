@@ -61,10 +61,7 @@ public class Scp999Role : CustomRole
     public override void AddRole(Player player)
     {
         player.Role.Set(this.Role, SpawnReason.ForceClass, RoleSpawnFlags.None);
-        Timing.CallDelayed(0.1f, () =>
-        {
-            player.Position = this.GetSpawnPosition();
-        });
+        player.Position = SpawnProperties.DynamicSpawnPoints.RandomItem().Position;
         
         player.ClearItems();
         player.ClearAmmo();
