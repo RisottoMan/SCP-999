@@ -179,7 +179,6 @@
         <Compile Include="Features\Controller\PlayerController.cs" />
         <Compile Include="Features\Manager\AbilityManager.cs" />
         <Compile Include="Features\Manager\AudioManager.cs" />
-        <Compile Include="Features\Manager\InvisibleManager.cs" />
         <Compile Include="Features\Manager\KeybindManager.cs" />
         <Compile Include="Features\Manager\SchematicManager.cs" />
         <Compile Include="Features\Manager\TextToyManager.cs" />

@@ -7,9 +7,9 @@ using Exiled.Events.EventArgs.Player;
 using Exiled.Events.EventArgs.Scp096;
 using Exiled.Events.EventArgs.Scp330;
 using Exiled.Events.EventArgs.Warhead;
+using LabApi.Events.Arguments.PlayerEvents;
 using MEC;
 using Scp999.Features;
-using Scp999.Features.Manager;
 using Random = UnityEngine.Random;
 
 namespace Scp999;
@@ -34,8 +34,7 @@ public class EventHandler
         Exiled.Events.Handlers.Player.UsingItem += this.OnUsingItem;
         Exiled.Events.Handlers.Player.Dying += this.OnPlayerDying;
         Exiled.Events.Handlers.Scp330.InteractingScp330 += this.OnInteractingScp330;
-        Exiled.Events.Handlers.Player.Verified += this.OnVerified;
-        Exiled.Events.Handlers.Player.ChangingSpectatedPlayer += this.OnChangingSpectatedPlayer;
+        LabApi.Events.Handlers.PlayerEvents.ValidatedVisibility += this.OnPlayerValidatedVisibility;
     }
     
     ~EventHandler()
@@ -53,8 +52,7 @@ public class EventHandler
         Exiled.Events.Handlers.Player.UsingItem -= this.OnUsingItem;
         Exiled.Events.Handlers.Player.Dying -= this.OnPlayerDying;
         Exiled.Events.Handlers.Scp330.InteractingScp330 -= this.OnInteractingScp330;
-        Exiled.Events.Handlers.Player.Verified -= this.OnVerified;
-        Exiled.Events.Handlers.Player.ChangingSpectatedPlayer -= this.OnChangingSpectatedPlayer;
+        LabApi.Events.Handlers.PlayerEvents.ValidatedVisibility -= this.OnPlayerValidatedVisibility;
     }
     
     /// <summary>
@@ -258,41 +256,21 @@ public class EventHandler
     }
 
     /// <summary>
-    /// Update size from SCP-999 to new player
+    /// Making SCP-999 invisible to every player
     /// </summary>
-    /// <param name="ev"></param>
-    private void OnVerified(VerifiedEventArgs ev)
-    {
-        if (ev.Player is null)
-            return;
-        
-        if (_scp999role is null)
-            return;
-        
-        var scp999Role = CustomRole.Get(typeof(Scp999Role));
-        foreach (Player scp999 in scp999Role!.TrackedPlayers)
-        {
-            InvisibleManager.MakeInvisibleForPlayer(scp999, ev.Player);
-        }
-    }
-    
-    /// <summary>
-    /// Spectators should see SCP-999 in the first person, unlike other players
-    /// It works with a delay from the server
-    /// </summary>
-    private void OnChangingSpectatedPlayer(ChangingSpectatedPlayerEventArgs ev)
+    private void OnPlayerValidatedVisibility(PlayerValidatedVisibilityEventArgs ev)
     {
         if (_scp999role is null)
             return;
-        
-        if (_scp999role!.Check(ev.NewTarget))
+
+        if (_scp999role.Check(ev.Target))
         {
-            InvisibleManager.RemoveInvisibleForPlayer(ev.NewTarget, ev.Player);
-        }
-        
-        if (_scp999role!.Check(ev.OldTarget))
-        {
-            InvisibleManager.MakeInvisibleForPlayer(ev.OldTarget, ev.Player);
+            ev.IsVisible = false;
+
+            if (ev.Target.CurrentSpectators.Contains(ev.Player))
+            {
+                ev.IsVisible = true;
+            }
         }
     }
 }

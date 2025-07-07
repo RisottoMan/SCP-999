@@ -34,11 +34,6 @@ public class PlayerController : MonoBehaviour
             _hintController = gameObject.AddComponent<HintController>();
             _hintController.Init(_player);
         });
-
-        Timing.CallDelayed(1f, () =>
-        {
-            InvisibleManager.MakeInvisible(_player); // Make player invisible for other players
-        });
         
         Log.Debug($"[PlayerController] Custom role granted for {this._player.Nickname}");
     }
@@ -52,7 +47,6 @@ public class PlayerController : MonoBehaviour
         Destroy(_movementController); // Destroy movement controller for schematic and audio
         Destroy(_cooldownController); // Destroy cooldown for abilities
 
-        InvisibleManager.RemoveInvisible(this._player);           // Remove invisible
         KeybindManager.UnregisterKeybindsForPlayer(this._player); // Unregister keybinds
         _audioPlayer.RemoveAllClips();                            // Remove all audio clips
         _audioPlayer.Destroy();                                   // Remove a AudioPlayer
