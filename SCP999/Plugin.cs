@@ -4,14 +4,13 @@ using System.Linq;
 using HarmonyLib;
 using Exiled.CustomRoles.API;
 using Exiled.API.Features;
-using Scp999.Features.Manager;
 
 namespace Scp999;
 public class Plugin : Plugin<Config>
 {
     public override string Name => "Scp999";
     public override string Author => "RisottoMan";
-    public override Version Version => new(1, 1, 0);
+    public override Version Version => new(1, 2, 0);
     public override Version RequiredExiledVersion => new(9, 6, 0);
     
     private Harmony _harmony;
@@ -50,14 +49,14 @@ public class Plugin : Plugin<Config>
         this.CreatePluginDirectory(AudioPath);
 
         // Register the abilities
-        AbilityManager.RegisterAbilities();
+        RoleAPI.API.Managers.AbilityRegistrator.RegisterAbilities();
         
         base.OnEnabled();
     }
 
     public override void OnDisabled()
     {
-        AbilityManager.UnregisterAbilities();
+        RoleAPI.API.Managers.AbilityRegistrator.UnregisterAbilities();
         
         Config.Scp999RoleConfig.Unregister();
         _harmony.UnpatchAll();

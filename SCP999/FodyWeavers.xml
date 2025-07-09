@@ -4,6 +4,7 @@
       AudioPlayerApi
       0Harmony
       NVorbis
+      RoleAPI
     </IncludeAssemblies>
   </Costura>
 </Weavers>

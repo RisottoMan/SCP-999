@@ -2,7 +2,8 @@
 using CustomPlayerEffects;
 using Exiled.API.Features;
 using MEC;
-using Scp999.Interfaces;
+using RoleAPI.API;
+using RoleAPI.API.Interfaces;
 using UnityEngine;
 
 namespace Scp999.Features.Abilities;
@@ -13,21 +14,21 @@ public class HelloAbility : Ability
     public override int KeyId => 9992;
     public override KeyCode KeyCode => KeyCode.F;
     public override float Cooldown => 15f;
-    protected override void ActivateAbility(Player player, Animator animator, AudioPlayer audioPlayer)
+    protected override void ActivateAbility(Player player, ExtendedRole role)
     {
         player.EnableEffect<Ensnared>(3f);
-        animator?.Play("HelloAnimation");
+        role.Animator?.Play("HelloAnimation");
 
         if (Random.Range(0, 2) == 0)
         {
-            audioPlayer.AddClip("hello");
+            role.AudioPlayer.AddClip("hello");
         }
         else
         {
-            audioPlayer.AddClip("hi");
+            role.AudioPlayer.AddClip("hi");
         }
         
-        Timing.RunCoroutine(this.CheckEndOfAnimation(player, animator));
+        Timing.RunCoroutine(this.CheckEndOfAnimation(player, role.Animator));
     }
     
     private IEnumerator<float> CheckEndOfAnimation(Player player, Animator animator)
