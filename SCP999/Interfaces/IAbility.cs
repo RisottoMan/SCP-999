@@ -1,10 +1,13 @@
-﻿using Exiled.Events.EventArgs.Player;
+﻿using UnityEngine;
 
-namespace SCP999.Interfaces;
+namespace Scp999.Interfaces;
 public interface IAbility
 {
     string Name { get; }
-    string Description { get;  }
-    ItemType ItemType { get; }
-    void Invoke(UsingItemEventArgs ev);
+    string Description { get; }
+    int KeyId { get; }
+    KeyCode KeyCode { get; } 
+    float Cooldown { get; }
+    void Register();
+    void Unregister();
 }

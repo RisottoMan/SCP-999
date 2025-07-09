@@ -1,125 +1,157 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Reflection;
 using Exiled.API.Enums;
 using Exiled.API.Features;
 using Exiled.CustomRoles.API.Features;
 using Exiled.Events.EventArgs.Player;
 using Exiled.Events.EventArgs.Scp096;
+using Exiled.Events.EventArgs.Scp330;
 using Exiled.Events.EventArgs.Warhead;
-using SCP999.Interfaces;
+using LabApi.Events.Arguments.PlayerEvents;
+using MEC;
+using Scp999.Features;
+using Random = UnityEngine.Random;
 
-namespace SCP999;
+namespace Scp999;
 public class EventHandler
 {
-    private List<IAbility> _abilityList;
-    
-    /// <summary>
-    /// Activate all ability classes and save to the list
-    /// </summary>
-    public void OnWaitingRound()
+    private readonly Plugin _plugin;
+    private Scp999Role _scp999role;
+    public EventHandler(Plugin plugin)
     {
-        _abilityList = new List<IAbility>();
-        
-        foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
-        {
-            try
-            {
-                if (type.IsInterface || !type.GetInterfaces().Contains(typeof(IAbility)))
-                    continue;
-
-                var activator = Activator.CreateInstance(type) as IAbility;
-                if (activator != null)
-                {
-                    _abilityList.Add(activator);
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error("OnWaitingRound error in IAbility:" + ex.Message);
-            }
-        }
+        _plugin = plugin;
+    
+        Exiled.Events.Handlers.Server.RoundStarted += this.OnRoundStarted;
+        Exiled.Events.Handlers.Warhead.Starting += this.OnWarheadStart;
+        Exiled.Events.Handlers.Warhead.Stopping += this.OnWarheadStop;
+        Exiled.Events.Handlers.Scp096.AddingTarget += this.OnAddingTarget;
+        Exiled.Events.Handlers.Player.SpawningRagdoll += this.OnSpawningRagdoll;
+        Exiled.Events.Handlers.Player.EnteringPocketDimension += this.OnEnteringPocketDimension;
+        Exiled.Events.Handlers.Player.SearchingPickup += this.OnSearchingPickup;
+        Exiled.Events.Handlers.Player.DroppingItem += this.OnDroppingItem;
+        Exiled.Events.Handlers.Player.Hurting += this.OnPlayerHurting;
+        Exiled.Events.Handlers.Player.UsingItem += this.OnUsingItem;
+        Exiled.Events.Handlers.Player.UsingItem += this.OnUsingItem;
+        Exiled.Events.Handlers.Player.Dying += this.OnPlayerDying;
+        Exiled.Events.Handlers.Scp330.InteractingScp330 += this.OnInteractingScp330;
+        LabApi.Events.Handlers.PlayerEvents.ValidatedVisibility += this.OnPlayerValidatedVisibility;
+    }
+    
+    ~EventHandler()
+    {
+        Exiled.Events.Handlers.Server.RoundStarted -= this.OnRoundStarted;
+        Exiled.Events.Handlers.Warhead.Starting -= this.OnWarheadStart;
+        Exiled.Events.Handlers.Warhead.Stopping -= this.OnWarheadStop;
+        Exiled.Events.Handlers.Scp096.AddingTarget -= this.OnAddingTarget;
+        Exiled.Events.Handlers.Player.SpawningRagdoll -= this.OnSpawningRagdoll;
+        Exiled.Events.Handlers.Player.EnteringPocketDimension -= this.OnEnteringPocketDimension;
+        Exiled.Events.Handlers.Player.SearchingPickup -= this.OnSearchingPickup;
+        Exiled.Events.Handlers.Player.DroppingItem -= this.OnDroppingItem;
+        Exiled.Events.Handlers.Player.Hurting -= this.OnPlayerHurting;
+        Exiled.Events.Handlers.Player.UsingItem -= this.OnUsingItem;
+        Exiled.Events.Handlers.Player.UsingItem -= this.OnUsingItem;
+        Exiled.Events.Handlers.Player.Dying -= this.OnPlayerDying;
+        Exiled.Events.Handlers.Scp330.InteractingScp330 -= this.OnInteractingScp330;
+        LabApi.Events.Handlers.PlayerEvents.ValidatedVisibility -= this.OnPlayerValidatedVisibility;
     }
     
     /// <summary>
-    /// The logic of choosing SCP-999 if the round is started
+    /// Logic of choosing SCP-999 if the round is started
     /// </summary>
-    public void OnRoundStarted()
+    private void OnRoundStarted()
     {
-        Scp999Role? customRole = CustomRole.Get(typeof(Scp999Role)) as Scp999Role;
-        
-        foreach (Player player in Player.List)
+        _scp999role = CustomRole.Get(typeof(Scp999Role)) as Scp999Role;
+        if (_scp999role is null)
         {
-            // If there is no SCP-999 in the game, then add
-            if (customRole!.TrackedPlayers.Count >= customRole.SpawnProperties.Limit)
-                return;
-            
-            // The player already has a role
-            if (customRole.Check(player))
-                return;
+            Log.Error("Custom role SCP-999 role not found or not registered");
+            return;
+        }
 
-            // The player is an NPC
-            if (player.IsNPC && player.Nickname != "SCP-999")
+        // Minimum and maximum number of Players for the chance of SCP-999 appearing
+        float min = _plugin.Config.MinimumPlayers - 1;
+        float max = _plugin.Config.MaximumPlayers;
+
+        if (min < 0 || max < 0)
+        {
+            Log.Error("Set the number of players to normal values in config");
+            return;
+        }
+        
+        // Add SCP-999 if no in the game
+        if (_scp999role!.TrackedPlayers.Count >= _scp999role.SpawnProperties.Limit)
+            return;
+        
+        for (int i = 0; i < _scp999role.SpawnProperties.Limit; i++)
+        {
+            // List of people who could potentially become SCP-999
+            var players = Player.List.Where(r => r.IsHuman && !r.IsNPC && r.CustomInfo == null).ToList();
+            // A minimum of players is required
+            if (players.Count < min || players.Count == 0)
+                return;
+        
+            // The formula for the chance of SCP-999 appearing in a round depends on count of players
+            float value = Math.Max(min, Math.Min(max, Player.List.Count));
+            float chance = (value - min) / (max - min);
+            
+            // Checking the chance to spawn in current round
+            float randomValue = Random.value;
+
+            Log.Debug($"[OnRoundStarted] Spawn chance {randomValue} >= {chance}");
+            
+            if (randomValue >= chance)
                 return;
             
-            // Checking the chance to spawn
-            if (UnityEngine.Random.Range(0, 100) > customRole.SpawnChance)
-                return;
-            
-            customRole.AddRole(player);
+            // Choosing a random player
+            Player randomPlayer = players.RandomItem();
+
+            Timing.CallDelayed(0.05f, () =>
+            {
+                _scp999role!.AddRole(randomPlayer);
+            });
         }
     }
-    
+
     /// <summary>
     /// Allow the use of abilities for SCP-999
     /// </summary>
-    public void OnUsingItem(UsingItemEventArgs ev)
+    private void OnUsingItem(UsingItemEventArgs ev)
     {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
+        if (_scp999role != null && _scp999role.Check(ev.Player))
         {
             ev.IsAllowed = false;
-            
-            _abilityList.FirstOrDefault(r => r.ItemType == ev.Item.Type)?.Invoke(ev);
         }
     }
-    
+
     /// <summary>
-    /// The mechanics of opening doors - todo
+    /// Block any damage from players
     /// </summary>
-    public void OnInteractingDoor(InteractingDoorEventArgs ev)
+    private void OnPlayerHurting(HurtingEventArgs ev)
     {
-        if (!CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
-            return;
-        
-        switch (ev.Door.Type)
+        if (_scp999role != null && _scp999role.Check(ev.Player))
         {
-            case DoorType.GateA:
-            case DoorType.GateB:
-            case DoorType.LczArmory:
-            case DoorType.Scp049Armory:
-            case DoorType.HID:
-            { break; }
-            default:
-            {
-                ev.IsAllowed = true;
-                break;
-            }
-        }
-    }
-    
-    /// <summary>
-    /// Allow the attacker to show the hitmarker
-    /// </summary>
-    public void OnPlayerHurting(HurtingEventArgs ev)
-    {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
-        {
-            if (ev.Amount < CustomRole.Get(typeof(Scp999Role))!.MaxHealth)
+            // Disable damage from players
+            if (!_plugin.Config.IsPlayerCanHurt && ev.Attacker is not null)
             {
                 ev.IsAllowed = false;
-                ev.Attacker?.ShowHitMarker();
-                ev.Player.Health -= 100;
+            }
+
+            // Disable damage from car
+            if (ev.DamageHandler.Type == DamageType.Crushed && 
+                ev.Player.CurrentRoom.Type == RoomType.Surface)
+            {
+                ev.IsAllowed = false;
+            }
+        
+            // Disable damage from tesla
+            if (ev.DamageHandler.Type == DamageType.Tesla)
+            {
+                ev.IsAllowed = false;
+            }
+        
+            // Increase damage from decontamination
+            if (ev.DamageHandler.Type == DamageType.Decontamination)
+            {
+                ev.Amount = 300;
             }
         }
     }
@@ -127,9 +159,9 @@ public class EventHandler
     /// <summary>
     /// Does not allow SCP-999 to pick up items
     /// </summary>
-    public void OnSeachingPickup(SearchingPickupEventArgs ev)
+    private void OnSearchingPickup(SearchingPickupEventArgs ev)
     {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
+        if (_scp999role != null && _scp999role.Check(ev.Player))
         {
             ev.IsAllowed = false;
         }
@@ -138,9 +170,9 @@ public class EventHandler
     /// <summary>
     /// Does not allow SCP-999 to drop items
     /// </summary>
-    public void OnDroppingItem(DroppingItemEventArgs ev)
+    private void OnDroppingItem(DroppingItemEventArgs ev)
     {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
+        if (_scp999role != null && _scp999role.Check(ev.Player))
         {
             ev.IsAllowed = false;
         }
@@ -149,7 +181,7 @@ public class EventHandler
     /// <summary>
     /// Clearing the inventory if the SCP-999 dies
     /// </summary>
-    public void OnPlayerDying(DyingEventArgs ev)
+    private void OnPlayerDying(DyingEventArgs ev)
     {
         if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
         {
@@ -158,55 +190,22 @@ public class EventHandler
     }
     
     /// <summary>
-    /// If the player leaves the game, then delete his instance
+    /// Does not allow SCP-999 to turn on the warhead
     /// </summary>
-    public void OnPlayerLeft(LeftEventArgs ev)
+    private void OnWarheadStart(StartingEventArgs ev)
     {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
-        {
-            CustomRole.Get(typeof(Scp999Role))!.RemoveRole(ev.Player);
-        }
-    }
-    
-    /// <summary>
-    /// If a player has spawned with a new role, then delete his instance
-    /// </summary>
-    public void OnPlayerSpawning(SpawningEventArgs ev)
-    {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
-        {
-            CustomRole.Get(typeof(Scp999Role))!.RemoveRole(ev.Player);
-        }
-    }
-    
-    /// <summary>
-    /// If a player has changed his class, then delete his instance
-    /// </summary>
-    public void OnChangingRole(ChangingRoleEventArgs ev)
-    {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
-        {
-            CustomRole.Get(typeof(Scp999Role))!.RemoveRole(ev.Player);
-        }
-    }
-    
-    /// <summary>
-    /// Does not allow SCP-999 to turn off the warhead
-    /// </summary>
-    public void OnWarheadStop(StoppingEventArgs ev)
-    {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
+        if (_scp999role != null && _scp999role.Check(ev.Player))
         {
             ev.IsAllowed = false;
         }
     }
     
     /// <summary>
-    /// Does not allow SCP-999 to enrage SCP-096
+    /// Does not allow SCP-999 to turn off the warhead
     /// </summary>
-    public void OnScpEnraging(EnragingEventArgs ev)
+    private void OnWarheadStop(StoppingEventArgs ev)
     {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
+        if (_scp999role != null && _scp999role.Check(ev.Player))
         {
             ev.IsAllowed = false;
         }
@@ -215,9 +214,9 @@ public class EventHandler
     /// <summary>
     /// Does not add SCP-999 for SCP-096 to targets
     /// </summary>
-    public void OnAddingTarget(AddingTargetEventArgs ev)
+    private void OnAddingTarget(AddingTargetEventArgs ev)
     {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
+        if (_scp999role != null && _scp999role.Check(ev.Player))
         {
             ev.IsAllowed = false;
         }
@@ -226,9 +225,9 @@ public class EventHandler
     /// <summary>
     /// If the SCP-999 dies, then his original body should not appear
     /// </summary>
-    public void OnSpawningRagdoll(SpawningRagdollEventArgs ev)
+    private void OnSpawningRagdoll(SpawningRagdollEventArgs ev)
     {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
+        if (_scp999role != null && _scp999role.Check(ev.Player))
         {
             ev.IsAllowed = false;
         }
@@ -237,11 +236,41 @@ public class EventHandler
     /// <summary>
     /// Does not allow SCP-106 to teleport SCP-999 to a pocket dimension
     /// </summary>
-    public void OnEnteringPocketDimension(EnteringPocketDimensionEventArgs ev)
+    private void OnEnteringPocketDimension(EnteringPocketDimensionEventArgs ev)
     {
-        if (CustomRole.Get(typeof(Scp999Role))!.Check(ev.Player))
+        if (_scp999role != null && _scp999role.Check(ev.Player))
         {
             ev.IsAllowed = false;
+        }
+    }
+
+    /// <summary>
+    /// Does not allow SCP-999 to take candies
+    /// </summary>
+    private void OnInteractingScp330(InteractingScp330EventArgs ev)
+    {
+        if (_scp999role != null && _scp999role.Check(ev.Player))
+        {
+            ev.IsAllowed = false;
+        }
+    }
+
+    /// <summary>
+    /// Making SCP-999 invisible to every player
+    /// </summary>
+    private void OnPlayerValidatedVisibility(PlayerValidatedVisibilityEventArgs ev)
+    {
+        if (_scp999role is null)
+            return;
+
+        if (_scp999role.Check(ev.Target))
+        {
+            ev.IsVisible = false;
+
+            if (ev.Target.CurrentSpectators.Contains(ev.Player))
+            {
+                ev.IsVisible = true;
+            }
         }
     }
 }
