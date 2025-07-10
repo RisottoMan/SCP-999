@@ -10,7 +10,7 @@ public class AnimationAbility : Ability
 {
     public override string Name => "Dance";
     public override string Description => "Play a random funny animation. You will not be able to move during the animation";
-    public override int KeyId => 9994;
+    public override int KeyId => 9993;
     public override KeyCode KeyCode => KeyCode.T;
     public override float Cooldown => 15f;
     protected override void ActivateAbility(Player player, Animator animator, AudioPlayer audioPlayer)

@@ -1,4 +1,6 @@
 ﻿using Exiled.API.Features;
+using Exiled.CustomRoles.API.Features;
+using Scp999.Features;
 using Scp999.Features.Controller;
 using UnityEngine;
 using UserSettings.ServerSpecific;
@@ -29,6 +31,12 @@ public abstract class Ability : IAbility
         
         // Check player
         if (!Player.TryGet(referenceHub, out Player player))
+            return;
+
+        if (CustomRole.Get(typeof(Scp999Role)) is not Scp999Role scp999Role)
+            return;
+
+        if (!scp999Role.Check(player))
             return;
 
         PlayerController controller = player.GameObject.GetComponent<PlayerController>();

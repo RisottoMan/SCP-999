@@ -1,4 +1,6 @@
-﻿using Exiled.API.Features;
+﻿using System.Collections.Generic;
+using Exiled.API.Features;
+using Exiled.API.Features.Core.UserSettings;
 using LabApi.Features.Wrappers;
 using MEC;
 using ProjectMER.Features.Objects;
@@ -27,15 +29,13 @@ public class PlayerController : MonoBehaviour
         _movementController.Init(_schematicObject, speaker, config.SchematicOffset);
         _cooldownController = gameObject.AddComponent<CooldownController>();
         
-        KeybindManager.RegisterKeybindsForPlayer(_player); // Register keybinds to player
-        
         Timing.CallDelayed(0.1f, () =>
         {
             _hintController = gameObject.AddComponent<HintController>();
             _hintController.Init(_player);
         });
         
-        Log.Debug($"[PlayerController] Custom role granted for {this._player.Nickname}");
+        Log.Debug($"[PlayerController] Custom role granted for {_player.Nickname}");
     }
     
     /// <summary>
@@ -47,12 +47,11 @@ public class PlayerController : MonoBehaviour
         Destroy(_movementController); // Destroy movement controller for schematic and audio
         Destroy(_cooldownController); // Destroy cooldown for abilities
 
-        KeybindManager.UnregisterKeybindsForPlayer(this._player); // Unregister keybinds
         _audioPlayer.RemoveAllClips();                            // Remove all audio clips
         _audioPlayer.Destroy();                                   // Remove a AudioPlayer
-        this._schematicObject.Destroy();                          // Remove schematic
+        _schematicObject.Destroy();                          // Remove schematic
         
-        Log.Debug($"[PlayerController] Custom role removed for {this._player.Nickname}");
+        Log.Debug($"[PlayerController] Custom role removed for {_player.Nickname}");
     }
     
     // Properties
@@ -65,6 +64,7 @@ public class PlayerController : MonoBehaviour
     private Animator _animator;
     private AudioPlayer _audioPlayer;
     private TextToy _textToy;
+    private IEnumerable<SettingBase> _settings;
     private MovementController _movementController;
     private CooldownController _cooldownController;
     private HintController _hintController;

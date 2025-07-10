@@ -9,7 +9,7 @@ public class HealAbility : Ability
 {
     public override string Name => "Heal";
     public override string Description => "Pressing the button activates the restoration of health around you for all players";
-    public override int KeyId => 9993;
+    public override int KeyId => 9992;
     public override KeyCode KeyCode => KeyCode.R;
     public override float Cooldown => 60f;
     protected override void ActivateAbility(Player player, Animator animator, AudioPlayer audioPlayer)

@@ -51,6 +51,7 @@ public class Plugin : Plugin<Config>
 
         // Register the abilities
         AbilityManager.RegisterAbilities();
+        KeybindManager.RegisterKeybinds();
         
         base.OnEnabled();
     }
@@ -58,6 +59,7 @@ public class Plugin : Plugin<Config>
     public override void OnDisabled()
     {
         AbilityManager.UnregisterAbilities();
+        KeybindManager.UnregisterKeybinds(); // Unregister keybinds
         
         Config.Scp999RoleConfig.Unregister();
         _harmony.UnpatchAll();
