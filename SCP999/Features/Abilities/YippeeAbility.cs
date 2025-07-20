@@ -7,7 +7,7 @@ namespace Scp999.Features.Abilities;
 public class YippeeAbility : Ability
 {
     public override string Name => "Yippee";
-    public override string Description => "When you click on this button, you will play the <i>Yippee</i> sound that all players will hear";
+    public override string Description => "Play just a funny Yippee sound";
     public override int KeyId => 9990;
     public override KeyCode KeyCode => KeyCode.Q;
     public override float Cooldown => 3f;

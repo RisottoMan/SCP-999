@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Exiled.API.Features.Spawn;
 using Exiled.API.Enums;
 using RoleAPI.API;
+using RoleAPI.API.Configs;
+using UnityEngine;
 
 namespace Scp999.Features;
 public class Scp999Role : ExtendedRole
@@ -40,10 +42,62 @@ public class Scp999Role : ExtendedRole
         "You have a lot of abilities, for example, you can heal players or dance.\n" +
         "Configure your buttons in the settings. Remove the stars.";
 
-    public override List<EffectType> EffectList { get; set; } = new()
+    public override SpawnConfig SpawnConfig { get; set; } = new()
     {
-        EffectType.Disabled,
-        EffectType.Slowness,
-        EffectType.Ghostly
+        MinPlayers = 7,
+        SpawnChance = 50
     };
+
+    public override SchematicConfig SchematicConfig { get; set; } = new()
+    {
+        SchematicName = "SCP999",
+        Offset = new Vector3(0f, -0.75f, 0f),
+    };
+
+    public override TextToyConfig TextToyConfig { get; set; } = new()
+    {
+        Text = "<color=orange>SCP-999</color>",
+        Offset = new Vector3(0, 1, 0),
+        Rotation = new Vector3(0, 180, 0),
+        Scale = new Vector3(0.2f, 0.2f, 0.2f),
+    };
+
+    public override HintConfig HintConfig { get; set; } = new()
+    {
+        Text = "<align=right><size=50><color=#ffa500>\ud83d\ude06 <b>SCP-999</b></color></size>\n" + 
+               "Abilities:\n" + 
+               "<color=%color%>Yippee {0}</color>\n" + 
+               "<color=%color%>Hello {1}</color>\n" + 
+               "<color=%color%>Heal {2}</color>\n" + 
+               "<color=%color%>Dance {3}</color>\n" + 
+               "\n<size=18>if you cant use abilities\nremove \u2b50 in settings</size></align>",
+        AvailableAbilityColor = "#ffa500",
+        UnavailableAbilityColor = "#966100"
+    };
+
+    public override AudioConfig AudioConfig { get; set; } = new()
+    {
+        Name = "scp999",
+        Volume = 100,
+        IsSpatial = true,
+        MinDistance = 5f,
+        MaxDistance = 15f
+    };
+
+    public override List<EffectConfig> Effects { get; set; } =
+    [
+        new EffectConfig()
+        {
+            EffectType = EffectType.Disabled,
+        },
+
+        new EffectConfig()
+        {
+            EffectType = EffectType.Slowness,
+            Intensity = 25
+        }
+    ];
+    
+    public override bool IsPlayerInvisible { get; set; } = true;
+    public override bool IsShowPlayerNickname { get; set; } = true;
 }

@@ -10,7 +10,7 @@ namespace Scp999.Features.Abilities;
 public class HelloAbility : Ability
 {
     public override string Name => "Hello";
-    public override string Description => "When you click on this button, you will greet the players or ask for attention";
+    public override string Description => "Greet the players and wave your paw";
     public override int KeyId => 9992;
     public override KeyCode KeyCode => KeyCode.F;
     public override float Cooldown => 15f;

@@ -9,7 +9,7 @@ namespace Scp999.Features.Abilities;
 public class HealAbility : Ability
 {
     public override string Name => "Heal";
-    public override string Description => "Pressing the button activates the restoration of health around you for all players";
+    public override string Description => "Heal all the players near you";
     public override int KeyId => 9993;
     public override KeyCode KeyCode => KeyCode.R;
     public override float Cooldown => 60f;

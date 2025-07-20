@@ -4,33 +4,22 @@ using System.Linq;
 using HarmonyLib;
 using Exiled.CustomRoles.API;
 using Exiled.API.Features;
+using Scp999.Configs;
 
 namespace Scp999;
 public class Plugin : Plugin<Config>
 {
     public override string Name => "Scp999";
     public override string Author => "RisottoMan";
-    public override Version Version => new(1, 2, 0);
+    public override Version Version => new(1, 3, 0);
     public override Version RequiredExiledVersion => new(9, 6, 0);
     
-    private Harmony _harmony;
-    private EventHandler _eventHandler;
     public static Plugin Singleton;
-    
-    // Configs path
-    public string BasePath { get; set; }
-    public string SchematicPath { get; set; }
-    public string AudioPath { get; set; }
-
     public override void OnEnabled()
     {
         Singleton = this;
-        _eventHandler = new EventHandler(this);
+        new EventHandler(this);
 
-        // Patch
-        _harmony = new Harmony($"risottoman.scp999");
-        _harmony.PatchAll();
-        
         // Checking that the ProjectMER plugin is loaded on the server
         if (!AppDomain.CurrentDomain.GetAssemblies().Any(x => x.FullName.ToLower().Contains("projectmer")))
         {
@@ -41,37 +30,15 @@ public class Plugin : Plugin<Config>
         // Register the custom scp999 role
         Config.Scp999RoleConfig.Register();
         
-        // Create config folders
-        BasePath = Path.Combine(Paths.IndividualConfigs, this.Name.ToLower());
-        SchematicPath = Path.Combine(BasePath, "Schematics");
-        AudioPath = Path.Combine(BasePath, "Audio");
-        this.CreatePluginDirectory(SchematicPath);
-        this.CreatePluginDirectory(AudioPath);
-
+        // Setup the RoleAPI
+        RoleAPI.Startup.SetupAPI(this.Name);
+        
         // Register the abilities
         RoleAPI.API.Managers.AbilityRegistrator.RegisterAbilities();
+        RoleAPI.API.Managers.KeybindManager.RegisterKeybinds(
+            RoleAPI.API.Managers.AbilityRegistrator.GetAbilities,
+            "SCP-999");
         
         base.OnEnabled();
-    }
-
-    public override void OnDisabled()
-    {
-        RoleAPI.API.Managers.AbilityRegistrator.UnregisterAbilities();
-        
-        Config.Scp999RoleConfig.Unregister();
-        _harmony.UnpatchAll();
-
-        _eventHandler = null;
-        Singleton = null;
-        
-        base.OnDisabled();
-    }
-
-    private void CreatePluginDirectory(string path)
-    {
-        if (!Directory.Exists(path))
-        {
-            Directory.CreateDirectory(path);
-        }
     }
 }
