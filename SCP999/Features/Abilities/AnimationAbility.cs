@@ -2,8 +2,8 @@
 using CustomPlayerEffects;
 using Exiled.API.Features;
 using MEC;
-using RoleAPI.API;
 using RoleAPI.API.Interfaces;
+using RoleAPI.API.Managers;
 using UnityEngine;
 
 namespace Scp999.Features.Abilities;
@@ -14,7 +14,7 @@ public class AnimationAbility : Ability
     public override int KeyId => 9994;
     public override KeyCode KeyCode => KeyCode.T;
     public override float Cooldown => 15f;
-    protected override void ActivateAbility(Player player, ExtendedRole role)
+    protected override void ActivateAbility(Player player, ObjectManager manager)
     {
         player.EnableEffect<Ensnared>(30f);
         
@@ -24,33 +24,33 @@ public class AnimationAbility : Ability
             // throwing balls
             case > 0 and <= 15:
             {
-                role.Animator?.Play($"FunAnimation1");
-                role.AudioPlayer?.AddClip($"circus"); 
+                manager.Animator?.Play($"FunAnimation1");
+                manager.AudioPlayer?.AddClip($"circus"); 
             } break;
             
             // Jump x3
             case > 15 and <= 60:
             {
-                role.Animator?.Play($"FunAnimation2");
-                role.AudioPlayer?.AddClip($"jump"); 
+                manager.Animator?.Play($"FunAnimation2");
+                manager.AudioPlayer?.AddClip($"jump"); 
             } break;
             
             // Shrinking
             case > 60 and <= 90:
             {
-                role.Animator?.Play($"FunAnimation3");
-                role.AudioPlayer?.AddClip($"funnytoy"); 
+                manager.Animator?.Play($"FunAnimation3");
+                manager.AudioPlayer?.AddClip($"funnytoy"); 
             } break;
             
             // UwU - Secret animation
             case > 90:
             {
-                role.Animator?.Play($"FunAnimation4");
-                role.AudioPlayer?.AddClip($"uwu"); 
+                manager.Animator?.Play($"FunAnimation4");
+                manager.AudioPlayer?.AddClip($"uwu"); 
             } break;
         }
         
-        Timing.RunCoroutine(this.CheckEndOfAnimation(player, role.Animator));
+        Timing.RunCoroutine(this.CheckEndOfAnimation(player, manager.Animator));
     }
 
     private IEnumerator<float> CheckEndOfAnimation(Player player, Animator animator)

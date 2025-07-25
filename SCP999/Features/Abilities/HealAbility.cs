@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Exiled.API.Features;
 using MEC;
-using RoleAPI.API;
 using RoleAPI.API.Interfaces;
+using RoleAPI.API.Managers;
 using UnityEngine;
 
 namespace Scp999.Features.Abilities;
@@ -13,10 +13,10 @@ public class HealAbility : Ability
     public override int KeyId => 9993;
     public override KeyCode KeyCode => KeyCode.R;
     public override float Cooldown => 60f;
-    protected override void ActivateAbility(Player player, ExtendedRole role)
+    protected override void ActivateAbility(Player player, ObjectManager manager)
     {
-        role.Animator?.Play("HealthAnimation");
-        role.AudioPlayer.AddClip($"health");
+        manager.Animator?.Play("HealthAnimation");
+        manager.AudioPlayer.AddClip($"health");
         
         // Heal all the players in the radius
         foreach (Player ply in Player.List)

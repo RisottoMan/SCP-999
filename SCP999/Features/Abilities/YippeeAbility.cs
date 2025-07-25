@@ -1,6 +1,6 @@
 ﻿using Exiled.API.Features;
-using RoleAPI.API;
 using RoleAPI.API.Interfaces;
+using RoleAPI.API.Managers;
 using UnityEngine;
 
 namespace Scp999.Features.Abilities;
@@ -11,9 +11,9 @@ public class YippeeAbility : Ability
     public override int KeyId => 9990;
     public override KeyCode KeyCode => KeyCode.Q;
     public override float Cooldown => 3f;
-    protected override void ActivateAbility(Player player, ExtendedRole role)
+    protected override void ActivateAbility(Player player, ObjectManager manager)
     {
-        if (role.AudioPlayer is null)
+        if (manager.AudioPlayer is null)
             return;
         
         // I would like a default yippee-tbh1.ogg to be used more often than yippee-tbh2.ogg
@@ -24,6 +24,6 @@ public class YippeeAbility : Ability
             value = 2;
         }
         
-        role.AudioPlayer.AddClip($"yippee-tbh{value}");
+        manager.AudioPlayer.AddClip($"yippee-tbh{value}");
     }
 }
