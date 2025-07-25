@@ -1,14 +1,10 @@
-﻿using System;
-using System.Linq;
-using Exiled.API.Enums;
+﻿using Exiled.API.Enums;
 using Exiled.API.Features;
 using Exiled.CustomRoles.API.Features;
 using Exiled.Events.EventArgs.Player;
 using Exiled.Events.EventArgs.Scp096;
 using Exiled.Events.EventArgs.Scp330;
 using Exiled.Events.EventArgs.Warhead;
-using LabApi.Events.Arguments.PlayerEvents;
-using MEC;
 using Scp999.Features;
 
 namespace Scp999;
@@ -35,26 +31,6 @@ public class EventHandler
         Exiled.Events.Handlers.Scp330.InteractingScp330 += this.OnInteractingScp330;
     }
     
-    ~EventHandler()
-    {
-        Exiled.Events.Handlers.Server.RoundStarted -= this.OnRoundStarted;
-        Exiled.Events.Handlers.Warhead.Starting -= this.OnWarheadStart;
-        Exiled.Events.Handlers.Warhead.Stopping -= this.OnWarheadStop;
-        Exiled.Events.Handlers.Scp096.AddingTarget -= this.OnAddingTarget;
-        Exiled.Events.Handlers.Player.SpawningRagdoll -= this.OnSpawningRagdoll;
-        Exiled.Events.Handlers.Player.EnteringPocketDimension -= this.OnEnteringPocketDimension;
-        Exiled.Events.Handlers.Player.SearchingPickup -= this.OnSearchingPickup;
-        Exiled.Events.Handlers.Player.DroppingItem -= this.OnDroppingItem;
-        Exiled.Events.Handlers.Player.Hurting -= this.OnPlayerHurting;
-        Exiled.Events.Handlers.Player.UsingItem -= this.OnUsingItem;
-        Exiled.Events.Handlers.Player.UsingItem -= this.OnUsingItem;
-        Exiled.Events.Handlers.Player.Dying -= this.OnPlayerDying;
-        Exiled.Events.Handlers.Scp330.InteractingScp330 -= this.OnInteractingScp330;
-    }
-    
-    /// <summary>
-    /// Logic of choosing SCP-999 if the round is started
-    /// </summary>
     private void OnRoundStarted()
     {
         _role = CustomRole.Get(typeof(Scp999Role)) as Scp999Role;

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using HarmonyLib;
 using Exiled.CustomRoles.API;
 using Exiled.API.Features;
 using Scp999.Configs;
