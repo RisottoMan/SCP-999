@@ -42,6 +42,8 @@ public class Scp999Role : ExtendedRole
         "You have a lot of abilities, for example, you can heal players or dance.\n" +
         "Configure your buttons in the settings. Remove the stars.";
 
+    public override string CustomDeathText { get; set; } = "There is no text here, as it is a safe class.";
+
     public override SpawnConfig SpawnConfig { get; set; } = new()
     {
         MinPlayers = 7,
