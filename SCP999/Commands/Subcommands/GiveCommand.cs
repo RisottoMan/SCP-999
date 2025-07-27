@@ -26,12 +26,6 @@ public class GiveCommand : ICommand
             return false;
         }
         
-        if (player.CustomInfo is not null)
-        {
-            response = "The player already have the custom role";
-            return false;
-        }
-        
         var scp999Role = CustomRole.Get(typeof(Scp999Role));
         if (scp999Role == null)
         {
