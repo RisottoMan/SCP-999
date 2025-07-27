@@ -44,6 +44,8 @@ public class Scp999Role : ExtendedRole
         "Configure your buttons in the settings. Remove the stars.";
 
     public override string CustomDeathText { get; set; } = "There is no text here, as it is a safe class.";
+    
+    public override string CassieDeathAnnouncement { get; set; } = $"SCP-999 contained successfully.";
 
     public override SpawnConfig SpawnConfig { get; set; } = new()
     {
