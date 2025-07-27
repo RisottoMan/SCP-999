@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Exiled.CustomRoles.API;
 using Exiled.API.Features;
 using Scp999.Configs;
@@ -16,26 +15,15 @@ public class Plugin : Plugin<Config>
     public override void OnEnabled()
     {
         Singleton = this;
-        new EventHandler(this);
-
-        // Checking that the ProjectMER plugin is loaded on the server
-        if (!AppDomain.CurrentDomain.GetAssemblies().Any(x => x.FullName.ToLower().Contains("projectmer")))
-        {
-            Log.Error("ProjectMER is not installed. Schematics can't spawn the SCP-999 game model.");
-            return;
-        }
-        
-        // Register the custom scp999 role
-        Config.Scp999RoleConfig.Register();
         
         // Setup the RoleAPI
-        RoleAPI.Startup.SetupAPI(this.Name);
+        if (!RoleAPI.Startup.SetupAPI(this.Name))
+            return;
+
+        // Register the custom role
+        Config.Scp999RoleConfig.Register();
         
-        // Register the abilities
-        RoleAPI.API.Managers.AbilityRegistrator.RegisterAbilities();
-        RoleAPI.API.Managers.KeybindManager.RegisterKeybinds(
-            RoleAPI.API.Managers.AbilityRegistrator.GetAbilities,
-            "SCP-999");
+        new EventHandler(this);
         
         base.OnEnabled();
     }
