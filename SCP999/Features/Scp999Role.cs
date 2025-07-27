@@ -4,6 +4,7 @@ using Exiled.API.Features.Spawn;
 using Exiled.API.Enums;
 using RoleAPI.API;
 using RoleAPI.API.Configs;
+using Scp999.Features.Abilities;
 using UnityEngine;
 
 namespace Scp999.Features;
@@ -84,6 +85,17 @@ public class Scp999Role : ExtendedRole
         IsSpatial = true,
         MinDistance = 5f,
         MaxDistance = 15f
+    };
+
+    public override AbilityConfig AbilityConfig { get; set; } = new()
+    {
+        AbilityTypes = 
+        [
+            typeof(YippeeAbility),
+            typeof(HelloAbility),
+            typeof(HealAbility),
+            typeof(AnimationAbility)
+        ]
     };
 
     public override List<EffectConfig> Effects { get; set; } =
