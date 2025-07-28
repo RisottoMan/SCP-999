@@ -32,12 +32,10 @@
 
 # Installation
 - ``Scp999.dll`` move to => ``~\EXILED\Plugins``
-- ``Schematics.tar.gz`` unzip to => ``~\EXILED\Configs\Plugins\scp999\Schematics``
-- ``Audio.tar.gz`` unzip to => ``~\EXILED\Configs\Plugins\scp999\Audio``
+- ``Audio.tar.gz`` unarchive to => ``~\EXILED\Configs\Plugins\scp999\Audio``
+- ``Schematics.tar.gz`` unarchive to => ``~\LabAPI\configs\ProjectMER\Schematics``
 - Install the [``ProjectMER.dll``](https://github.com/Michal78900/ProjectMER/releases/latest) to => ``~\LabAPI\plugins\global``
-- Install the [``HintServiceMeow-Exiled.dll``](https://github.com/MeowServer/HintServiceMeow/releases/latest) to => ``~\EXILED\Plugins``
 
-Use only ``HintServiceMeow-Exiled``, because ``HintServiceMeow-LabApi`` is causing problems.
 # Commands
 - Give permission ``.scp999`` to your role in ``EXILED/Configs/permissions.yml``
 - Use ``scp999 give [id]`` to give scp999 to specific player
