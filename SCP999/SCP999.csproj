@@ -25,6 +25,9 @@
         <WarningLevel>4</WarningLevel>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Exec Command="copy /Y $(TargetPath) &quot;%AppData%\EXILED\Plugins\&quot;" />
+    </Target>
     <ItemGroup>
         <Reference Include="0Harmony, Version=2.3.6.0, Culture=neutral, processorArchitecture=MSIL">
           <HintPath>packages\Lib.Harmony.2.3.6\lib\net48\0Harmony.dll</HintPath>
@@ -162,6 +165,7 @@
 	<Reference Include="AudioPlayerApi" HintPath="$(SL_REFERENCES)\AudioPlayerApi.dll" />
 	<Reference Include="HintServiceMeow" HintPath="$(SL_REFERENCES)\HintServiceMeow-Exiled.dll" />
 	<Reference Include="YamlDotNet" HintPath="$(SL_REFERENCES)\YamlDotNet.dll" />
+    <Reference Include="RoleAPI" HintPath="$(SL_REFERENCES)\RoleAPI.dll" />
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Commands\MainCommand.cs" />
@@ -173,19 +177,7 @@
         <Compile Include="Features\Abilities\HealAbility.cs" />
         <Compile Include="Features\Abilities\HelloAbility.cs" />
         <Compile Include="Features\Abilities\YippeeAbility.cs" />
-        <Compile Include="Features\Controller\CooldownController.cs" />
-        <Compile Include="Features\Controller\HintController.cs" />
-        <Compile Include="Features\Controller\MovementController.cs" />
-        <Compile Include="Features\Controller\PlayerController.cs" />
-        <Compile Include="Features\Manager\AbilityManager.cs" />
-        <Compile Include="Features\Manager\AudioManager.cs" />
-        <Compile Include="Features\Manager\KeybindManager.cs" />
-        <Compile Include="Features\Manager\SchematicManager.cs" />
-        <Compile Include="Features\Manager\TextToyManager.cs" />
         <Compile Include="Features\Scp999Role.cs" />
-        <Compile Include="Interfaces\Ability.cs" />
-        <Compile Include="Interfaces\IAbility.cs" />
-        <Compile Include="Patches\SchematicMerPatch.cs" />
         <Compile Include="Plugin.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>

@@ -1,21 +1,22 @@
 ﻿using System.Collections.Generic;
 using Exiled.API.Features;
 using MEC;
-using Scp999.Interfaces;
+using RoleAPI.API.Interfaces;
+using RoleAPI.API.Managers;
 using UnityEngine;
 
 namespace Scp999.Features.Abilities;
 public class HealAbility : Ability
 {
     public override string Name => "Heal";
-    public override string Description => "Pressing the button activates the restoration of health around you for all players";
-    public override int KeyId => 9992;
+    public override string Description => "Heal all the players near you";
+    public override int KeyId => 9993;
     public override KeyCode KeyCode => KeyCode.R;
     public override float Cooldown => 60f;
-    protected override void ActivateAbility(Player player, Animator animator, AudioPlayer audioPlayer)
+    protected override void ActivateAbility(Player player, ObjectManager manager)
     {
-        animator?.Play("HealthAnimation");
-        audioPlayer.AddClip($"health");
+        manager.Animator?.Play("HealthAnimation");
+        manager.AudioPlayer.AddClip($"health");
         
         // Heal all the players in the radius
         foreach (Player ply in Player.List)
