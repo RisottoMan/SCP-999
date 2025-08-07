@@ -11,10 +11,10 @@ public class YippeeAbility : Ability
     public override int KeyId => 9990;
     public override KeyCode KeyCode => KeyCode.Q;
     public override float Cooldown => 3f;
-    protected override void ActivateAbility(Player player, ObjectManager manager)
+    protected override bool ActivateAbility(Player player, ObjectManager manager)
     {
         if (manager.AudioPlayer is null)
-            return;
+            return false;
         
         // I would like a default yippee-tbh1.ogg to be used more often than yippee-tbh2.ogg
         int value = 1;
@@ -25,5 +25,6 @@ public class YippeeAbility : Ability
         }
         
         manager.AudioPlayer.AddClip($"yippee-tbh{value}");
+        return true;
     }
 }

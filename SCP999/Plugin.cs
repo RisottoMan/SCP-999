@@ -8,7 +8,7 @@ public class Plugin : Plugin<Config>
 {
     public override string Name => "Scp999";
     public override string Author => "RisottoMan";
-    public override Version Version => new(1, 3, 0);
+    public override Version Version => new(1, 4, 0);
     public override Version RequiredExiledVersion => new(9, 6, 0);
     
     public static Plugin Singleton;

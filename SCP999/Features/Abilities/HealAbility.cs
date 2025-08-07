@@ -13,7 +13,7 @@ public class HealAbility : Ability
     public override int KeyId => 9993;
     public override KeyCode KeyCode => KeyCode.R;
     public override float Cooldown => 60f;
-    protected override void ActivateAbility(Player player, ObjectManager manager)
+    protected override bool ActivateAbility(Player player, ObjectManager manager)
     {
         manager.Animator?.Play("HealthAnimation");
         manager.AudioPlayer.AddClip($"health");
@@ -30,8 +30,9 @@ public class HealAbility : Ability
                 ply.Heal(value);
             }
         }
-        
+
         //Timing.RunCoroutine(this.CheckEndOfAnimation(player, animator));
+        return true;
     }
 
     private IEnumerator<float> CheckEndOfAnimation(Player player, Animator animator)

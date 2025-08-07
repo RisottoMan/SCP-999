@@ -14,7 +14,7 @@ public class HelloAbility : Ability
     public override int KeyId => 9992;
     public override KeyCode KeyCode => KeyCode.F;
     public override float Cooldown => 15f;
-    protected override void ActivateAbility(Player player, ObjectManager manager)
+    protected override bool ActivateAbility(Player player, ObjectManager manager)
     {
         player.EnableEffect<Ensnared>(3f);
         manager.Animator?.Play("HelloAnimation");
@@ -29,6 +29,7 @@ public class HelloAbility : Ability
         }
         
         Timing.RunCoroutine(this.CheckEndOfAnimation(player, manager.Animator));
+        return true;
     }
     
     private IEnumerator<float> CheckEndOfAnimation(Player player, Animator animator)
